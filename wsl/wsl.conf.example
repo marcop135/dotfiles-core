@@ -1,0 +1,63 @@
+# Per-distribution WSL configuration.
+#
+#   sudo cp wsl/wsl.conf.example /etc/wsl.conf
+#   wsl.exe --shutdown          (from Windows, to apply)
+#
+# This file lives INSIDE the distribution and configures that distribution.
+# .wslconfig lives on the Windows side and configures the WSL 2 virtual machine
+# as a whole. Confusing the two is the most common WSL configuration mistake;
+# see wsl/.wslconfig.example.
+
+[boot]
+# Start the init system, so services installed with apt (docker, postgres,
+# ssh) can be managed with systemctl instead of being started by hand from a
+# shell that has to stay open.
+systemd = true
+
+[automount]
+# Mount Windows drives at /mnt/c rather than /c. This is the default; it is
+# stated explicitly because scripts and documentation everywhere assume it.
+enabled = true
+root = /mnt/
+
+# metadata lets Linux permissions and ownership be stored on the Windows
+# filesystem. Without it, everything under /mnt/c is mode 777 and owned by
+# you, which is why `chmod +x` on a file there appears to work and then does
+# not survive.
+#
+# umask/fmask give files a sane default mode instead of 777: directories 755,
+# files 644, and the executable bit only where it was set deliberately.
+options = "metadata,umask=22,fmask=11"
+
+[interop]
+# Allow calling Windows executables from Linux. This is what makes
+# `explorer.exe .`, `clip.exe`, and the wsl_run bridge work.
+enabled = true
+
+# Whether the Windows PATH is appended to the Linux PATH.
+#
+# true (the default) means every Windows executable is callable by name, which
+# is convenient and also means `python` might resolve to a Windows Store stub
+# and `node` to a Windows install rather than your nvm-managed one. The
+# resulting bugs are hard to see.
+#
+# false is the cleaner choice if you are willing to add back the few Windows
+# tools you actually call. Add them in ~/.bashrc.local:
+#
+#   path_append '/mnt/c/Windows/System32'
+#   path_append '/mnt/c/Program Files/Microsoft VS Code/bin'
+appendWindowsPath = true
+
+[network]
+# Regenerate /etc/resolv.conf from the Windows DNS settings on every start.
+# Leave this true unless you have a specific reason not to. If you set it
+# false you own /etc/resolv.conf yourself, and DNS will break the next time
+# the host's network changes.
+generateResolvConf = true
+
+# Regenerate /etc/hosts from the Windows hosts file.
+generateHosts = true
+
+[user]
+# The account a `wsl` invocation starts as.
+# default = your-username

@@ -1,0 +1,12 @@
+# Installed as ~/.bash_profile.
+#
+# bash reads ~/.bash_profile for a login shell and ~/.bashrc for an interactive
+# non-login shell, and never both. Git Bash launched from the Start menu is a
+# login shell; the integrated terminal in an editor often is not.
+#
+# Without this file, half your shells would have your configuration and half
+# would not.
+#
+# Everything real lives in ~/.bashrc.
+
+[ -r "$HOME/.bashrc" ] && . "$HOME/.bashrc"

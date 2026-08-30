@@ -1,0 +1,121 @@
+# Starship prompt for Windows: Git Bash and PowerShell.
+#
+# macOS and WSL use shared/starship.toml. The two files are close to identical;
+# the differences are the three noted below, and each of them would need a
+# conditional that starship does not have.
+#
+# Install:  winget install Starship.Starship
+
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = true
+command_timeout = 2000
+scan_timeout = 1000
+
+format = '$os$directory$git_branch${custom.languages}$cmd_duration\n$character'
+
+[character]
+success_symbol = '[>](bold green)'
+error_symbol = '[>](bold red)'
+
+[os]
+disabled = false
+format = '[$symbol]($style) '
+style = 'bold purple'
+
+[os.symbols]
+Macos = 'mac'
+Linux = 'ubu'
+Windows = 'win'
+
+[directory]
+truncation_length = 3
+truncate_to_repo = false
+truncation_symbol = '.../'
+# Forward slashes on Windows too, so the prompt reads the same in Git Bash,
+# PowerShell, and a WSL tab in the same terminal window.
+use_os_path_sep = false
+format = '[$path]($style) '
+style = 'bold #1e90ff'
+
+# Difference 1 of 3.
+# On macOS and Linux, starship renders the home directory as `~` on its own.
+# On Windows it does not, because the same directory has two spellings:
+# `C:/Users/<you>` in PowerShell and `/c/Users/<you>` in Git Bash. Both have to
+# be substituted, and the substitution has to name the user.
+#
+# `$USERNAME` is not interpolated in a starship config, so this cannot be
+# written generically. Uncomment and put your own username in ~/.config, or
+# accept the full path. It is one of the few places in this repository where a
+# machine-specific value is unavoidable, which is exactly why it is left blank
+# here rather than filled in with someone else's.
+#
+# [directory.substitutions]
+# "C:/Users/YOUR-USERNAME" = "~"
+# "/c/Users/YOUR-USERNAME" = "~"
+
+[git_branch]
+format = '\([$branch](bold #16a34a)\) '
+
+[git_status]
+disabled = true
+
+[git_state]
+disabled = true
+
+[username]
+disabled = true
+
+[hostname]
+disabled = true
+
+[cmd_duration]
+min_time = 3000
+format = '[$duration]($style) '
+style = 'bold #6b7280'
+
+[nodejs]
+disabled = true
+
+[python]
+disabled = true
+
+[php]
+disabled = true
+
+[custom.languages]
+description = 'Language versions for the current project, joined with a middot'
+when = true
+format = '([$output]($style) )'
+style = 'bold #6b7280'
+
+# Difference 2 of 3.
+# Force the script through sh. Without this, starship picks the parent shell,
+# which is PowerShell when the prompt runs in PowerShell, and the sh script
+# below either errors or hangs. Git for Windows puts sh.exe on PATH, so this
+# works in both Git Bash and PowerShell.
+shell = ['sh', '--norc', '--noprofile']
+
+command = '''
+out=""
+sep=""
+if [ -f package.json ] || [ -f .nvmrc ] || [ -f .node-version ] || [ -d node_modules ]; then
+  v=$(node --version 2>/dev/null | sed 's/^v//')
+  if [ -n "$v" ]; then out="${out}${sep}nod $v"; sep=" - "; fi
+fi
+if [ -f pyproject.toml ] || [ -f requirements.txt ] || [ -f setup.py ]; then
+  v=$(python --version 2>/dev/null | awk '{print $2}')
+  [ -z "$v" ] && v=$(py --version 2>/dev/null | awk '{print $2}')
+  if [ -n "$v" ]; then out="${out}${sep}pyt $v"; sep=" - "; fi
+fi
+if [ -f composer.json ]; then
+  v=$(php --version 2>/dev/null | head -1 | awk '{print $2}')
+  if [ -n "$v" ]; then out="${out}${sep}php $v"; sep=" - "; fi
+fi
+printf '%s' "$out"
+'''
+
+# Difference 3 of 3.
+# The macOS file resolves Python as `python3` first. On Windows the launcher is
+# `py` and the executable is `python`; `python3` is usually a Microsoft Store
+# stub that opens the Store rather than printing a version.

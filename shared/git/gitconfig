@@ -1,0 +1,64 @@
+# Git configuration shared by macOS, Git Bash, WSL, and PowerShell.
+#
+# Installed as ~/.gitconfig. There is no [user] section here and there never
+# will be: a name, an email, and a signing key are per-person, not
+# per-environment, and this file is public. They belong in ~/.gitconfig.local,
+# which is untracked and included at the bottom.
+#
+# Everything below is either a cross-platform correctness fix or a default that
+# is wrong out of the box. Nothing here is a personal preference about output.
+
+[core]
+	# The single most common cross-platform failure. A shell script checked out
+	# with CRLF fails with `bad interpreter: /bin/bash^M`, and the error names
+	# the interpreter rather than the line ending. `input` commits LF and checks
+	# out what the repository says, which is what .gitattributes is for.
+	autocrlf = input
+	eol = lf
+
+	# Honoured on Windows only, ignored elsewhere, which is why one file works
+	# on all four platforms. Without it a deep node_modules tree fails to check
+	# out at 260 characters, and the error points at a file rather than at the
+	# limit.
+	longpaths = true
+
+[init]
+	# GitHub, GitLab, and every CI default have used main for years. Git still
+	# defaults to master and prints a paragraph about it on every init.
+	defaultBranch = main
+
+[push]
+	# `git push` on a new branch, without -u and without the copy-paste of the
+	# hint git prints. It sets the upstream on the first push.
+	autoSetupRemote = true
+
+[fetch]
+	# Delete remote-tracking branches that no longer exist on the remote.
+	# Without it, `git branch -r` accumulates every branch ever merged.
+	prune = true
+
+[pull]
+	# Rebase rather than merge on pull, so a stale local branch does not
+	# manufacture a merge commit that nobody asked for. This is the one
+	# opinionated line in the file. Override it in ~/.gitconfig.local.
+	rebase = true
+
+[diff]
+	# Colour moved lines differently from added and removed ones. A refactor
+	# that moves a block otherwise reads as a large deletion next to a large
+	# addition, and the actual change hides between them.
+	colorMoved = zebra
+
+[rerere]
+	# Remember how a conflict was resolved and reapply it the next time the
+	# same conflict appears. It pays for itself the first time a long-running
+	# branch is rebased twice.
+	enabled = true
+
+[include]
+	# Last, so it wins. Identity, signing key, work overrides, and anything
+	# else that describes you or one machine.
+	#
+	#   git config --file ~/.gitconfig.local user.name  "Your Name"
+	#   git config --file ~/.gitconfig.local user.email "you@example.com"
+	path = ~/.gitconfig.local

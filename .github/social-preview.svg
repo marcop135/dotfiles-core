@@ -1,0 +1,250 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 1280 640"
+     width="1280"
+     height="640"
+     role="img"
+     aria-label="~/.dotfiles-core: cross-platform shell configuration, one source of truth">
+
+  <title>~/.dotfiles-core: Cross-Platform Shell Configuration, One Source of Truth</title>
+
+  <defs>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#05070E"/>
+      <stop offset="100%" stop-color="#0A101F"/>
+    </linearGradient>
+
+    <radialGradient id="vignette" cx="0.5" cy="0.42" r="0.75">
+      <stop offset="0%" stop-color="#1B2740" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#1B2740" stop-opacity="0"/>
+    </radialGradient>
+
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0 L0 0 0 40"
+            fill="none"
+            stroke="#38BDF8"
+            stroke-opacity="0.07"
+            stroke-width="1"/>
+    </pattern>
+
+    <linearGradient id="boxGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#111B2E"/>
+      <stop offset="100%" stop-color="#080D18"/>
+    </linearGradient>
+
+    <linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1C2942"/>
+      <stop offset="100%" stop-color="#142034"/>
+    </linearGradient>
+
+    <filter id="cardShadow" x="-30%" y="-40%" width="160%" height="200%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10"
+                    flood-color="#000000" flood-opacity="0.7"/>
+    </filter>
+
+    <!-- Rounded top corners only, for the window chrome strip. -->
+    <clipPath id="clipMac"><rect x="65"  y="215" width="275" height="135" rx="14"/></clipPath>
+    <clipPath id="clipWsl"><rect x="355" y="215" width="275" height="135" rx="14"/></clipPath>
+    <clipPath id="clipGit"><rect x="645" y="215" width="275" height="135" rx="14"/></clipPath>
+    <clipPath id="clipPwsh"><rect x="940" y="215" width="275" height="135" rx="14"/></clipPath>
+  </defs>
+
+  <style>
+    .mono {
+      font-family: "Cascadia Code", "Cascadia Mono", Consolas,
+                   "SFMono-Regular", Menlo, "DejaVu Sans Mono", monospace;
+    }
+
+    .sans {
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont,
+                   Inter, Helvetica, Arial, sans-serif;
+    }
+
+    .h1 {
+      font-size: 80px;
+      font-weight: 700;
+      fill: #E8FAFF;
+      letter-spacing: -2px;
+    }
+
+    .h2 {
+      font-size: 34px;
+      font-weight: 600;
+      fill: #7F9AB8;
+      letter-spacing: -0.5px;
+    }
+
+    .sh {
+      font-size: 40px;
+      font-weight: 700;
+    }
+
+    .plat {
+      font-size: 24px;
+      font-weight: 600;
+      fill: #7F9AB8;
+    }
+
+    .stats {
+      font-size: 28px;
+      font-weight: 500;
+      fill: #7F9AB8;
+    }
+
+    .statnum {
+      font-size: 40px;
+      font-weight: 700;
+      fill: #FFFFFF;
+    }
+  </style>
+
+  <rect width="1280" height="640" fill="url(#ground)"/>
+  <rect width="1280" height="640" fill="url(#grid)"/>
+  <rect width="1280" height="640" fill="url(#vignette)"/>
+
+  <!-- Centered composition -->
+  <g transform="translate(0 75)">
+
+    <!-- Repository title -->
+    <text class="mono h1"
+          x="640"
+          y="100"
+          text-anchor="middle">
+      <tspan fill="#38BDF8">~/.</tspan><tspan>dotfiles-core</tspan>
+    </text>
+
+    <!-- Tagline -->
+    <text class="sans h2"
+          x="640"
+          y="160"
+          text-anchor="middle">
+      cross-platform shell configuration, one source of truth
+    </text>
+
+    <!-- Platforms, drawn as terminal windows -->
+    <g filter="url(#cardShadow)">
+
+      <!-- zsh / macOS -->
+      <g clip-path="url(#clipMac)">
+        <rect x="65" y="215" width="275" height="135" fill="url(#boxGradient)"/>
+        <rect x="65" y="215" width="275" height="30" fill="url(#chrome)"/>
+        <circle cx="87"  cy="230" r="5" fill="#EF4444" fill-opacity="0.8"/>
+        <circle cx="105" cy="230" r="5" fill="#F59E0B" fill-opacity="0.8"/>
+        <circle cx="123" cy="230" r="5" fill="#22C55E" fill-opacity="0.8"/>
+        <rect x="65" y="344" width="275" height="6" fill="#C084FC"/>
+      </g>
+      <rect x="65" y="215" width="275" height="135" rx="14"
+            fill="none" stroke="#243450" stroke-width="2"/>
+
+      <text class="mono sh"
+            x="202.5"
+            y="278"
+            text-anchor="middle"
+            fill="#C084FC">zsh</text>
+
+      <text class="sans plat"
+            x="202.5"
+            y="318"
+            text-anchor="middle">macOS</text>
+
+
+      <!-- bash / WSL -->
+      <g clip-path="url(#clipWsl)">
+        <rect x="355" y="215" width="275" height="135" fill="url(#boxGradient)"/>
+        <rect x="355" y="215" width="275" height="30" fill="url(#chrome)"/>
+        <circle cx="377" cy="230" r="5" fill="#EF4444" fill-opacity="0.8"/>
+        <circle cx="395" cy="230" r="5" fill="#F59E0B" fill-opacity="0.8"/>
+        <circle cx="413" cy="230" r="5" fill="#22C55E" fill-opacity="0.8"/>
+        <rect x="355" y="344" width="275" height="6" fill="#FB923C"/>
+      </g>
+      <rect x="355" y="215" width="275" height="135" rx="14"
+            fill="none" stroke="#243450" stroke-width="2"/>
+
+      <text class="mono sh"
+            x="492.5"
+            y="278"
+            text-anchor="middle"
+            fill="#FB923C">bash</text>
+
+      <text class="sans plat"
+            x="492.5"
+            y="318"
+            text-anchor="middle">WSL</text>
+
+
+      <!-- bash / Git Bash -->
+      <g clip-path="url(#clipGit)">
+        <rect x="645" y="215" width="275" height="135" fill="url(#boxGradient)"/>
+        <rect x="645" y="215" width="275" height="30" fill="url(#chrome)"/>
+        <circle cx="667" cy="230" r="5" fill="#EF4444" fill-opacity="0.8"/>
+        <circle cx="685" cy="230" r="5" fill="#F59E0B" fill-opacity="0.8"/>
+        <circle cx="703" cy="230" r="5" fill="#22C55E" fill-opacity="0.8"/>
+        <rect x="645" y="344" width="275" height="6" fill="#38BDF8"/>
+      </g>
+      <rect x="645" y="215" width="275" height="135" rx="14"
+            fill="none" stroke="#243450" stroke-width="2"/>
+
+      <text class="mono sh"
+            x="782.5"
+            y="278"
+            text-anchor="middle"
+            fill="#38BDF8">bash</text>
+
+      <text class="sans plat"
+            x="782.5"
+            y="318"
+            text-anchor="middle">Git Bash</text>
+
+
+      <!-- pwsh / PowerShell -->
+      <g clip-path="url(#clipPwsh)">
+        <rect x="940" y="215" width="275" height="135" fill="url(#boxGradient)"/>
+        <rect x="940" y="215" width="275" height="30" fill="url(#chrome)"/>
+        <circle cx="962"  cy="230" r="5" fill="#EF4444" fill-opacity="0.8"/>
+        <circle cx="980"  cy="230" r="5" fill="#F59E0B" fill-opacity="0.8"/>
+        <circle cx="998"  cy="230" r="5" fill="#22C55E" fill-opacity="0.8"/>
+        <rect x="940" y="344" width="275" height="6" fill="#38BDF8"/>
+      </g>
+      <rect x="940" y="215" width="275" height="135" rx="14"
+            fill="none" stroke="#243450" stroke-width="2"/>
+
+      <text class="mono sh"
+            x="1077.5"
+            y="278"
+            text-anchor="middle"
+            fill="#38BDF8">pwsh</text>
+
+      <text class="sans plat"
+            x="1077.5"
+            y="318"
+            text-anchor="middle">PowerShell</text>
+
+    </g>
+
+    <!-- Metrics -->
+    <g class="mono stats">
+
+      <text x="300"
+            y="430"
+            text-anchor="middle">
+        <tspan class="statnum">3</tspan>
+        <tspan> platforms</tspan>
+      </text>
+
+      <text x="640"
+            y="430"
+            text-anchor="middle">
+        <tspan class="statnum">4</tspan>
+        <tspan> shells</tspan>
+      </text>
+
+      <text x="980"
+            y="430"
+            text-anchor="middle">
+        <tspan class="statnum">11</tspan>
+        <tspan> symlinks</tspan>
+      </text>
+
+    </g>
+
+  </g>
+</svg>

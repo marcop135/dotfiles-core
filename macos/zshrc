@@ -1,0 +1,134 @@
+# zsh configuration for macOS.
+#
+# Installed as ~/.zshrc. Anything that also applies on Windows or WSL lives in
+# shared/shell/; this file holds only what is macOS-specific or zsh-specific.
+
+# ---------- Repository root ----------
+# ~/.zshrc is normally a symlink into this repository. Follow it to find the
+# shared layer. If it is a real file (copied rather than linked), fall back to
+# the conventional clone location.
+if [[ -L ${(%):-%x} ]]; then
+  DOTFILES_ROOT=${${:-$(readlink -f ${(%):-%x})}:h:h}
+else
+  DOTFILES_ROOT=${DOTFILES_ROOT:-$HOME/code/dotfiles-core}
+fi
+export DOTFILES_ROOT
+
+# ---------- Shared layer ----------
+[[ -r $DOTFILES_ROOT/shared/shell/init.sh ]] && source "$DOTFILES_ROOT/shared/shell/init.sh"
+
+# ---------- zsh options ----------
+export HISTFILE="$HOME/.zsh_history"
+export SAVEHIST=$HISTSIZE
+
+setopt SHARE_HISTORY          # One history across every open tab, live.
+setopt HIST_IGNORE_ALL_DUPS   # Keep only the most recent copy of a command.
+setopt HIST_IGNORE_SPACE      # A command typed with a leading space is not recorded.
+setopt HIST_REDUCE_BLANKS
+setopt EXTENDED_HISTORY       # Record timestamps, so `history` stays useful later.
+
+# zsh's counterpart to bash's HISTIGNORE, which zsh ignores. A pattern, not a
+# colon-separated list. Same intent as the one in shared/shell/env.sh: drop the
+# commands that are noise, so history stays worth searching.
+HISTORY_IGNORE='(ls|la|ll|cd|cd -|pwd|exit|clear|history)'
+
+setopt AUTO_CD                # `src` instead of `cd src`.
+setopt AUTO_PUSHD             # Every cd pushes onto the stack, so `cd -2` works.
+setopt PUSHD_IGNORE_DUPS
+setopt INTERACTIVE_COMMENTS   # Allow `# ...` on the interactive command line.
+setopt NO_BEEP
+
+# ---------- Completion ----------
+# compinit is slow (it stats every directory in $fpath). Rebuild the dump at
+# most once a day and load the cached version otherwise; this is worth roughly
+# 100-200ms on every new shell.
+autoload -Uz compinit
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
+
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'   # Case-insensitive.
+zstyle ':completion:*' menu select
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+# ---------- Homebrew ----------
+# Apple silicon installs under /opt/homebrew, Intel under /usr/local. Probing
+# both keeps one file working on both, which matters more than it sounds when
+# a machine is replaced.
+for _brew_prefix in /opt/homebrew /usr/local; do
+  if [[ -x $_brew_prefix/bin/brew ]]; then
+    eval "$($_brew_prefix/bin/brew shellenv)"
+    break
+  fi
+done
+unset _brew_prefix
+
+# ---------- Node ----------
+# nvm is sourced lazily. Loading it eagerly costs 200-400ms on every shell
+# start, which is the single largest avoidable cost in a typical zsh setup.
+# The wrappers below load it on first use and then replace themselves.
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+
+_load_nvm() {
+  unset -f nvm node npm npx 2>/dev/null
+  [[ -s $NVM_DIR/nvm.sh ]] && source "$NVM_DIR/nvm.sh"
+  [[ -s $NVM_DIR/bash_completion ]] && source "$NVM_DIR/bash_completion"
+}
+
+if [[ -s $NVM_DIR/nvm.sh ]]; then
+  nvm() { _load_nvm; nvm "$@"; }
+  node() { _load_nvm; node "$@"; }
+  npm() { _load_nvm; npm "$@"; }
+  npx() { _load_nvm; npx "$@"; }
+fi
+
+# ---------- Prompt ----------
+# Skip starship when TERM is dumb. Non-interactive consumers (some editor
+# terminals, Emacs tramp, several agent CLIs) set it, and a prompt that emits
+# escape codes into a dumb terminal prints an error on every keystroke.
+if command -v starship >/dev/null 2>&1 && [[ ${TERM:-} != dumb ]]; then
+  export STARSHIP_CONFIG="$HOME/.config/starship.toml"
+  eval "$(starship init zsh)"
+fi
+
+# ---------- macOS aliases ----------
+# BSD ls does not understand --color=auto; the shared alias is replaced here.
+alias ls='ls -G'
+alias ll='ls -alFG'
+alias la='ls -AG'
+
+# Show and hide dotfiles in Finder without opening a preferences pane.
+alias showfiles='defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder'
+alias hidefiles='defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder'
+
+# Flush the DNS cache. Two commands, neither of them memorable.
+alias flushdns='sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
+
+# Remove the quarantine attribute from a downloaded file that Gatekeeper is
+# refusing to open. Use it when you know what the file is, not reflexively.
+alias unquarantine='xattr -d com.apple.quarantine'
+
+# Open the current directory in Finder.
+alias f='open .'
+
+# ---------- macOS functions ----------
+# Copy the working tree path to the clipboard. Paste targets exist on every
+# platform; the command to reach them does not.
+pwdcopy() {
+  pwd | tr -d '\n' | pbcopy
+  echo "copied: $(pwd)"
+}
+
+# Which application is holding a file open. The usual reason a volume will not
+# eject or a file will not delete.
+whohas() {
+  [[ -n ${1-} ]] || { echo "usage: whohas <path>" >&2; return 2; }
+  lsof -- "$1"
+}
+
+# ---------- Local overrides ----------
+# shared/shell/init.sh already sources ~/.shell.local. This is the zsh-only
+# escape hatch for anything that cannot be written in POSIX sh.
+[[ -r $HOME/.zshrc.local ]] && source "$HOME/.zshrc.local"

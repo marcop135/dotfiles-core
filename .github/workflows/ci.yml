@@ -1,0 +1,143 @@
+# CI for a configuration repository.
+#
+# There is no build and no test suite in the usual sense. What can go wrong here
+# is drift: the module manifest naming a file that has moved, an installer that
+# breaks on one platform only, a shell fragment with a syntax error that nobody
+# notices until a new machine, or a secret arriving in a repository that is
+# public. Each job below is one of those.
+#
+# The installers are exercised twice. Once in dry-run mode, which is their
+# default, so nothing on the runner is modified. Once for real, against a
+# throwaway home directory, because the code path that writes to $HOME is the
+# only one that can damage a machine and a dry run proves nothing about it.
+
+name: ci
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  schedule:
+    # Weekly, so a runner image that moves out from under the installers shows
+    # up as a failure here rather than on a new machine.
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+  # On a pull_request event gitleaks asks the API which commits the PR contains,
+  # rather than walking the checkout. Without this it gets a 403 and the job
+  # fails, so the scan is red on every PR and green on every push, which reads
+  # as a secret in the branch rather than a missing scope.
+  pull-requests: read
+
+jobs:
+  validate:
+    name: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # gitleaks scans every commit's diff, which needs the whole history
+          # rather than the default shallow clone.
+          fetch-depth: 0
+
+      - name: no secrets in the tree or the history
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: manifest, links, shellcheck, and parse
+        # The whole gate is one script, so there is one definition of it rather
+        # than one here and one in the README. It needs nothing installed: this
+        # repository configures shells, and checking it should not require a
+        # language runtime that the thing it configures does not.
+        run: bash ./scripts/check.sh
+
+  install:
+    # macOS is a first-class target here, not a courtesy entry. It is the
+    # platform this repository is least often edited from, so it is the one
+    # most likely to drift.
+    name: install (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v7
+
+      # Invoked as `bash <script>` rather than `./<script>`, so the job does not
+      # depend on the executable bit surviving a checkout on every platform.
+      - name: list modules
+        run: bash ./scripts/install.sh --list
+
+      - name: current link state
+        run: bash ./scripts/install.sh --status
+
+      - name: plan, without applying it
+        run: bash ./scripts/install.sh
+
+      - name: apply, unlink, and restore against a throwaway home
+        run: bash ./scripts/test-install.sh
+
+      - name: doctor
+        run: bash ./scripts/doctor.sh
+
+      - name: shellcheck, which the macOS image does not ship
+        # The Ubuntu image has it, so the validate job gets it for free. The
+        # macOS image does not, and check.sh treats a missing shellcheck under
+        # CI as a hole in the gate rather than a skip, so the step below would
+        # fail without this one.
+        if: runner.os == 'macOS'
+        run: brew install shellcheck
+
+      - name: zshrc parses
+        # The one file bash -n cannot check: it uses zsh glob qualifiers, which
+        # are a syntax error to bash. check.sh runs `zsh -n` wherever zsh is
+        # present, and the macOS runner is where that is guaranteed. It also
+        # re-runs the whole gate under bash 3.2, which is the only place that
+        # version is exercised.
+        if: runner.os == 'macOS'
+        run: bash ./scripts/check.sh
+
+      - name: bootstrap plan, without applying it
+        # Dry run only, so nothing on the runner changes. It is still the only
+        # place the Darwin half of the script runs at all: `bash -n` proves it
+        # parses, not that the platform guard, the Homebrew probe, and the
+        # checks behave.
+        if: runner.os == 'macOS'
+        run: bash ./macos/bootstrap.sh
+
+  install-windows:
+    name: install (windows)
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: list modules
+        run: .\scripts\install.ps1 -List
+
+      - name: current link state
+        run: .\scripts\install.ps1 -Status
+
+      - name: plan, without applying it
+        run: .\scripts\install.ps1
+
+      - name: apply, unlink, and restore against a throwaway home
+        # Only the prompt module: the shell entry installs to
+        # $PROFILE.CurrentUserAllHosts, which is fixed by the host process and
+        # does not follow a scratch home. See the script's header.
+        run: .\scripts\test-install.ps1
+
+      - name: doctor
+        run: .\scripts\doctor.ps1
+
+      - name: git bash side of the same machine
+        shell: bash
+        run: |
+          bash ./scripts/install.sh --list
+          bash ./scripts/install.sh
+          bash ./scripts/test-install.sh

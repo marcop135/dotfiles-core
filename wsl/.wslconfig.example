@@ -1,0 +1,53 @@
+# WSL 2 virtual machine configuration.
+#
+#   copy wsl\.wslconfig.example %USERPROFILE%\.wslconfig
+#   wsl --shutdown
+#
+# This file lives on the WINDOWS side, at C:\Users\<you>\.wslconfig, and
+# configures the VM that every WSL 2 distribution shares. The per-distribution
+# settings are in /etc/wsl.conf inside the distribution instead. See
+# wsl/wsl.conf.example.
+#
+# Nothing here is required. The defaults work. These are the knobs worth
+# knowing about when something is wrong.
+
+[wsl2]
+# Memory ceiling. The default is 50 percent of host RAM, and WSL 2 is
+# aggressive about reaching it: the Linux page cache counts as used memory from
+# Windows' point of view, so the VM's working set grows until it hits the cap
+# and stays there. Capping it lower is often the fix for "my machine has no
+# RAM left and WSL is doing nothing".
+memory = 8GB
+
+# Processor count. Defaults to all of them, which means a `make -j` inside WSL
+# can starve the Windows side.
+processors = 4
+
+# Swap file for the VM. 0 disables it. Leaving some swap is usually better than
+# having the Linux OOM killer terminate a build.
+swap = 8GB
+
+# Reclaim memory back to Windows as pages are freed inside the VM, instead of
+# holding the high-water mark until shutdown. Requires a recent WSL.
+# Values: disabled, gradual, dropcache.
+autoMemoryReclaim = gradual
+
+# Return unused disk space in the virtual disk to Windows. Without this, the
+# .vhdx only ever grows.
+sparseVhd = true
+
+# Mirror the Windows network stack rather than running a NAT. This makes
+# localhost work in both directions, lets a VPN on the host apply to WSL, and
+# generally removes a whole class of "why can't WSL reach this" problems.
+# Requires Windows 11 22H2 or later.
+networkingMode = mirrored
+
+# With mirrored networking, allow a connection from the host to reach a port
+# bound inside WSL through the Windows firewall.
+[wsl2.firewall]
+# defaultLoopbackPolicy = allow
+
+[experimental]
+# Only relevant when networkingMode is mirrored. Retries a bind that would
+# otherwise fail because Windows already holds the port.
+hostAddressLoopback = true

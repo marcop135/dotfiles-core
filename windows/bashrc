@@ -1,0 +1,121 @@
+# bash configuration for Git Bash on Windows.
+#
+# Installed as ~/.bashrc, which on Git Bash means C:\Users\<you>\.bashrc.
+#
+# Git Bash is an MSYS2 environment: a POSIX layer over Win32. Most things work
+# the way they do on Linux, and the ones that do not are the interesting part
+# of this file. Each is commented where it appears.
+
+# ---------- Repository root ----------
+# ~/.bashrc is normally a symlink into this repository. Follow it to find the
+# shared layer; fall back to the conventional clone location if it is a copy.
+if [ -L "${BASH_SOURCE[0]}" ]; then
+  DOTFILES_ROOT="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)"
+else
+  DOTFILES_ROOT="${DOTFILES_ROOT:-$HOME/code/dotfiles-core}"
+fi
+export DOTFILES_ROOT
+
+# ---------- Shared layer ----------
+[ -r "$DOTFILES_ROOT/shared/shell/init.sh" ] && . "$DOTFILES_ROOT/shared/shell/init.sh"
+
+# ---------- bash options ----------
+export HISTFILE="$HOME/.bash_history"
+export HISTCONTROL=ignoreboth:erasedups   # No duplicates, no leading-space commands.
+shopt -s histappend                       # Do not truncate history from other tabs.
+shopt -s checkwinsize
+shopt -s cdspell                          # Correct small typos in a cd target.
+shopt -s globstar 2>/dev/null || true     # ** matches across directories.
+
+# Write history after every command rather than only on exit, so a crashed or
+# force-closed terminal does not take the session's history with it.
+PROMPT_COMMAND="history -a${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+
+# ---------- Native Windows binaries ----------
+# Some Windows CLIs have no MSYS build, and calling the bare name either finds
+# nothing or finds an MSYS shim that behaves differently. Pointing at the .exe
+# explicitly is the fix.
+#
+# The pattern generalises: if a Windows tool behaves oddly under Git Bash, try
+# the .exe. If it takes path or flag arguments, see MSYS2_ARG_CONV_EXCL below.
+
+# The Windows OpenSSH client, not the one bundled with Git for Windows. Only
+# this one can talk to the ssh-agent Windows service and to keys held in a
+# hardware token.
+[ -x /c/Windows/System32/OpenSSH/ssh.exe ] && alias ssh='/c/Windows/System32/OpenSSH/ssh.exe'
+
+# winget has no MSYS build at all.
+alias winget='winget.exe'
+
+# ---------- MSYS path conversion ----------
+# MSYS rewrites arguments that look like Unix paths into Windows paths before
+# handing them to a native executable. It is usually what you want, and
+# occasionally catastrophic: a flag like `/v` becomes `C:/Program Files/Git/v`,
+# and a glob meant for the remote side of an rsync gets expanded locally.
+#
+# Two escapes:
+#   1. Double the leading slash:  reg.exe query ... //v Something
+#   2. Disable conversion for one command:  MSYS2_ARG_CONV_EXCL='*' cmd.exe /c ...
+#
+# The theme detection in shared/shell/theme.sh uses the first. The update
+# functions in shared/shell/update.sh use the second.
+
+# ---------- Windows to WSL bridge ----------
+# Run a command inside WSL from Git Bash, for when the Linux build of a tool
+# works and the Windows build does not.
+#
+#   --exec    so wsl passes positional arguments through.
+#   bash -ic  so ~/.bashrc runs and version-managed binaries (nvm, pyenv) are
+#             on PATH; without -i they are not.
+#
+# The catch: inside WSL, $HOME is /home/<you>, not C:\Users\<you>. A command
+# bridged this way reaches your Windows home only through /mnt/c, which is slow.
+wsl_run() {
+  [ -n "${1-}" ] || { echo "usage: wsl_run <command> [args...]" >&2; return 2; }
+  _wsl_cmd=$1
+  shift
+  MSYS2_ARG_CONV_EXCL='*' wsl.exe --exec bash -ic "exec $_wsl_cmd \"\$@\"" _ "$@"
+  _wsl_status=$?
+  unset _wsl_cmd
+  return $_wsl_status
+}
+
+# ---------- Node ----------
+# nvm-windows installs to C:\ProgramData\nvm and is a Windows executable, not
+# the shell function that nvm is on Linux and macOS. `nvm use` works, but it
+# switches a symlink globally rather than per-shell.
+[ -x '/c/ProgramData/nvm/nvm.exe' ] && alias nvm='/c/ProgramData/nvm/nvm.exe'
+
+# ---------- Prompt ----------
+# Skip starship when TERM is dumb. Several editor terminals and agent CLIs set
+# it, and a prompt emitting escape codes into a dumb terminal prints an error
+# on every redraw.
+if command -v starship >/dev/null 2>&1 && [ "${TERM:-}" != dumb ]; then
+  export STARSHIP_CONFIG="$HOME/.config/starship.toml"
+  eval "$(starship init bash)"
+fi
+
+# ---------- Windows-specific aliases ----------
+# Open the current directory in Explorer.
+alias e='explorer.exe .'
+
+# Windows sockets are invisible to the MSYS `netstat`; the .exe sees them.
+alias netstat='netstat.exe'
+
+# Clipboard. clip.exe takes stdin; the read direction needs PowerShell.
+alias clip='clip.exe'
+paste() {
+  powershell.exe -NoProfile -Command Get-Clipboard | tr -d '\r'
+}
+
+# Copy the working directory as a Windows path, ready to paste into a Windows
+# application that will not understand /c/Users/...
+pwdcopy() {
+  cygpath -w "$(pwd)" | tr -d '\n' | clip.exe
+  echo "copied: $(cygpath -w "$(pwd)")"
+}
+
+# ---------- Local overrides ----------
+# shared/shell/init.sh already sources ~/.shell.local. This is the bash-only
+# escape hatch.
+[ -r "$HOME/.bashrc.local" ] && . "$HOME/.bashrc.local"

@@ -1,0 +1,57 @@
+# shellcheck shell=sh
+# Machine-local shell configuration.
+#
+#   cp shared/shell/local.sh.example ~/.shell.local
+#
+# shared/shell/init.sh sources ~/.shell.local last, if it exists, so everything
+# here wins over the tracked configuration.
+#
+# Why this file is not in the repository
+# --------------------------------------
+# This is where employer settings, client paths, machine-specific PATH entries,
+# and anything that identifies this particular computer belong. Keeping them
+# outside the repository means:
+#
+#   1. No tracked file has to be redacted before the repository is published.
+#   2. `git status` stays clean while you experiment.
+#   3. A leak requires two mistakes, not one.
+#
+# The repository's .gitignore covers `*.local`, so even a file created inside
+# the repo by accident stays untracked.
+
+# ---------- Identity ----------
+# Git identity belongs in ~/.gitconfig.local, which this repository does not
+# install: it is per-person, not per-environment. Set it once with
+# `git config --global`, or here for any tool that reads it from the
+# environment instead.
+# export GIT_AUTHOR_NAME="Your Name"
+
+# ---------- PATH ----------
+# path_prepend and path_append are defined in shared/shell/env.sh and are
+# no-ops when the directory does not exist, so an entry for a tool you have not
+# installed yet is harmless.
+# path_prepend "$HOME/.cargo/bin"
+# path_prepend "/opt/homebrew/opt/php@8.4/bin"
+
+# ---------- Secrets ----------
+# Do not put API keys in this file, or in any file, if you can avoid it. A
+# plaintext token in $HOME is readable by every process you run, including
+# every npm postinstall script and every coding agent.
+#
+# Fetch at the point of use from the OS keychain or a secret manager instead:
+#
+#   export SOME_API_KEY="$(security find-generic-password -a "$USER" -s some-service -w)"   # macOS
+#   export SOME_API_KEY="$(secret-tool lookup service some-service)"                        # Linux
+#   export SOME_API_KEY="$(pass show some/service)"                                         # pass
+#
+# Better still, wrap the tool so the value only exists for the duration of one
+# command and never enters the environment of unrelated processes:
+#
+#   sometool() {
+#     SOME_API_KEY="$(security find-generic-password -a "$USER" -s some-service -w)" \
+#       command sometool "$@"
+#   }
+
+# ---------- Work-specific ----------
+# alias deploy-staging='...'
+# export SOME_INTERNAL_REGISTRY='...'

@@ -1,0 +1,31 @@
+# Machine-local overlays. Every tracked rc file sources its `*.local` sibling if
+# it exists, so private configuration never has to enter this repository.
+*.local
+
+# Secrets, if one is ever copied in here by mistake. Nothing in this repository
+# produces one, but the cost of the rule is zero and the cost of the mistake is
+# permanent.
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+
+# Backups, if the installer ever writes one inside the clone rather than $HOME.
+*.bak
+*.bak.*
+
+# AI coding agent session state
+.claude/
+.cursor/
+
+# OS and editor noise
+.DS_Store
+._*
+Thumbs.db
+*.swp
+*.swo
+*~

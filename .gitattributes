@@ -1,0 +1,9 @@
+# Shell scripts and rc files are symlinked into $HOME on all three platforms.
+# A CRLF line ending in a file that bash sources is a syntax error, so LF is
+# enforced in the repository regardless of the checkout platform.
+* text=auto eol=lf
+
+*.ps1 text eol=lf
+*.psm1 text eol=lf
+
+*.png binary

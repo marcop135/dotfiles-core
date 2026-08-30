@@ -1,0 +1,22 @@
+# Editor-side rules for the working tree. .gitattributes already guarantees LF
+# in the repository, so end_of_line here only stops the editor writing CRLF in
+# the first place. The rest is what git cannot enforce: encoding, final
+# newline, trailing whitespace, and indentation.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.md]
+# Two trailing spaces are a hard line break in markdown.
+trim_trailing_whitespace = false
+
+[shared/git/gitconfig]
+# git writes tabs into a config file itself, so anything else guarantees a
+# diff the first time `git config --global` touches the installed link.
+indent_style = tab

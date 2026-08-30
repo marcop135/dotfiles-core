@@ -1,0 +1,125 @@
+# Starship prompt, shared by macOS and WSL.
+#
+# Windows Git Bash and PowerShell use windows/starship.toml. Two files rather
+# than one, because the three differences would each need a conditional and
+# starship has none.
+#
+# Install:
+#   macOS    brew install starship
+#   WSL      curl -sS https://starship.rs/install.sh | sh -s -- -y
+#   Windows  winget install Starship.Starship
+#
+# https://starship.rs/config/
+
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = true
+
+# A shimmed node (nvm, volta, asdf) can take well over the 500ms default to
+# answer `node --version`, and starship silently drops the module when it times
+# out. The prompt looks fine and is quietly wrong.
+command_timeout = 2000
+
+# The default 30ms scan timeout trips on network mounts and on /mnt/c under
+# WSL, producing a prompt that intermittently loses the git branch.
+scan_timeout = 1000
+
+# Deliberately short: OS tag, directory, branch, language versions. Everything
+# else is one keystroke away and does not need to be on screen at all times.
+format = '$os$directory$git_branch${custom.languages}$cmd_duration\n$character'
+
+[character]
+success_symbol = '[>](bold green)'
+error_symbol = '[>](bold red)'
+
+[os]
+disabled = false
+format = '[$symbol]($style) '
+style = 'bold purple'
+
+# Three letters rather than a glyph, so the prompt is readable in a terminal
+# without a Nerd Font installed. This is the whole point of the OS module here:
+# in a session that might be macOS, Git Bash, or WSL, knowing which one you are
+# typing into prevents a real class of mistake.
+[os.symbols]
+Macos = 'mac'
+Linux = 'ubu'
+Ubuntu = 'ubu'
+Debian = 'deb'
+Windows = 'win'
+
+[directory]
+truncation_length = 3
+truncate_to_repo = false
+truncation_symbol = '.../'
+# Always forward slashes, even on Windows, so the prompt looks identical across
+# all three platforms.
+use_os_path_sep = false
+format = '[$path]($style) '
+# A pinned hex value rather than a palette name. "bold yellow" resolves through
+# each terminal's own ANSI palette and comes out a different colour in iTerm2,
+# Windows Terminal, and a plain xterm.
+style = 'bold #1e90ff'
+
+# No manual $HOME substitutions here. The directory module already renders the
+# home directory as `~` on every platform, and hardcoding a path is how a
+# username ends up in a config file that gets published.
+
+[git_branch]
+format = '\([$branch](bold #16a34a)\) '
+
+[git_status]
+# Disabled: computing it requires a full status walk, which is the slowest
+# thing in the prompt on a large repository or a network filesystem. `gs` is
+# right there.
+disabled = true
+
+[git_state]
+disabled = true
+
+[username]
+disabled = true
+
+[hostname]
+disabled = true
+
+[cmd_duration]
+# Only for commands slow enough that you had time to look away.
+min_time = 3000
+format = '[$duration]($style) '
+style = 'bold #6b7280'
+
+# Built-in language modules are disabled in favour of one combined custom
+# module, so the separator only ever appears between two versions and never
+# leads or trails.
+[nodejs]
+disabled = true
+
+[python]
+disabled = true
+
+[php]
+disabled = true
+
+[custom.languages]
+description = 'Language versions for the current project, joined with a middot'
+when = true
+format = '([$output]($style) )'
+style = 'bold #6b7280'
+command = '''
+out=""
+sep=""
+if [ -f package.json ] || [ -f .nvmrc ] || [ -f .node-version ] || [ -d node_modules ]; then
+  v=$(node --version 2>/dev/null | sed 's/^v//')
+  if [ -n "$v" ]; then out="${out}${sep}nod $v"; sep=" - "; fi
+fi
+if [ -f pyproject.toml ] || [ -f requirements.txt ] || [ -f setup.py ]; then
+  v=$(python3 --version 2>/dev/null | awk '{print $2}')
+  if [ -n "$v" ]; then out="${out}${sep}pyt $v"; sep=" - "; fi
+fi
+if [ -f composer.json ]; then
+  v=$(php --version 2>/dev/null | head -1 | awk '{print $2}')
+  if [ -n "$v" ]; then out="${out}${sep}php $v"; sep=" - "; fi
+fi
+printf '%s' "$out"
+'''

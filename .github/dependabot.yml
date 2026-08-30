@@ -1,0 +1,16 @@
+# Nothing here has a package manifest, and nothing should: the tooling is bash
+# and PowerShell. The one thing that can go stale is the set of actions the
+# workflow pins.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    # Without this, a bump is opened against the default branch, which is main.
+    # Everything else reaches main by a pull request from develop, and a change
+    # landing on main directly leaves develop behind with no way back that does
+    # not involve a merge from main.
+    target-branch: develop
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: 'chore'

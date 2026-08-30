@@ -1,0 +1,49 @@
+# Global gitignore, installed as ~/.config/git/ignore.
+#
+# Git reads that path on every platform with no config entry pointing at it,
+# which is why this is a link rather than a core.excludesFile setting.
+#
+# The bar for a line here: it is noise produced by an operating system, an
+# editor, or a tool, on any repository you happen to open. Anything specific to
+# one project belongs in that project's .gitignore, where the rest of the team
+# can see it. Ignoring a project's build output globally is how a build output
+# directory ends up missing from a clone for everyone else.
+
+# ---------- macOS ----------
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# ---------- Windows ----------
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ---------- Linux ----------
+.directory
+.Trash-*
+.nfs*
+
+# ---------- Editors ----------
+# Only the per-user state. A project's committed .vscode/extensions.json or
+# .idea run configuration is deliberate and shared, so neither directory is
+# ignored wholesale here.
+*.swp
+*.swo
+*~
+.*.swp
+.*.swo
+.vscode/settings.json
+.idea/workspace.xml
+.idea/tasks.xml
+
+# ---------- Tools ----------
+# Local environment overrides that should never be committed anywhere.
+*.local
+!*.local.example
+.env.local

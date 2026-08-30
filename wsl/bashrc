@@ -1,0 +1,132 @@
+# bash configuration for WSL (Ubuntu and Debian derivatives).
+#
+# Installed as ~/.bashrc inside the WSL distribution, which is
+# /home/<you>/.bashrc, not C:\Users\<you>\.bashrc.
+#
+# WSL is a real Linux, so most of this is ordinary bash configuration. The
+# interesting parts are the places where the Windows host is visible: theme
+# detection through the registry, the /mnt/c performance cliff, and interop
+# with Windows executables.
+
+# ---------- Repository root ----------
+if [ -L "${BASH_SOURCE[0]}" ]; then
+  DOTFILES_ROOT="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)"
+else
+  DOTFILES_ROOT="${DOTFILES_ROOT:-$HOME/code/dotfiles-core}"
+fi
+export DOTFILES_ROOT
+
+# ---------- Shared layer ----------
+[ -r "$DOTFILES_ROOT/shared/shell/init.sh" ] && . "$DOTFILES_ROOT/shared/shell/init.sh"
+
+# ---------- bash options ----------
+export HISTFILE="$HOME/.bash_history"
+export HISTCONTROL=ignoreboth:erasedups
+shopt -s histappend
+shopt -s checkwinsize
+shopt -s cdspell
+shopt -s globstar 2>/dev/null || true
+
+PROMPT_COMMAND="history -a${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+
+# ---------- Colours ----------
+if command -v dircolors >/dev/null 2>&1; then
+  eval "$(dircolors -b)"
+fi
+
+# A world-writable directory renders as black-on-green in the default
+# LS_COLORS, and every directory on a DrvFs mount (/mnt/c) is world-writable.
+# Without this override, `ls /mnt/c/...` is a wall of green highlight.
+export LS_COLORS="${LS_COLORS}:ow=01;34:tw=01;34"
+
+# ---------- Node ----------
+# nvm inside WSL, not the Windows nvm. Lazily loaded for the same reason as on
+# macOS: sourcing it eagerly costs a few hundred milliseconds per shell.
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+
+_load_nvm() {
+  unset -f nvm node npm npx 2>/dev/null
+  # shellcheck source=/dev/null
+  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+  # shellcheck source=/dev/null
+  [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
+}
+
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  nvm() { _load_nvm; nvm "$@"; }
+  node() { _load_nvm; node "$@"; }
+  npm() { _load_nvm; npm "$@"; }
+  npx() { _load_nvm; npx "$@"; }
+fi
+
+# ---------- Prompt ----------
+# The prompt config is shared with macOS: starship's [os] module detects Linux
+# on its own, so one file covers both.
+if command -v starship >/dev/null 2>&1 && [ "${TERM:-}" != dumb ]; then
+  export STARSHIP_CONFIG="$HOME/.config/starship.toml"
+  eval "$(starship init bash)"
+else
+  # Fallback prompt if starship is not installed. Includes the hostname,
+  # because a WSL tab and a Git Bash tab in the same terminal window otherwise
+  # look identical, and running the wrong command in the wrong one is a real
+  # and recurring mistake.
+  case "$TERM" in
+    *-256color | xterm-color | screen* | tmux*)
+      PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+      ;;
+    *)
+      PS1='\u@\h:\w\$ '
+      ;;
+  esac
+fi
+
+# ---------- Windows interop ----------
+# WSL puts the Windows PATH on the Linux PATH by default, so `notepad.exe`,
+# `explorer.exe`, and `clip.exe` are callable directly. It is also why PATH is
+# so long here, and why `node` can resolve to a Windows install. doctor.sh
+# names the offender when it does.
+#
+# To turn it off, set appendWindowsPath = false in /etc/wsl.conf and add back
+# only what you need. See wsl/wsl.conf.example.
+
+# Open the current directory in Windows Explorer.
+alias e='explorer.exe .'
+
+# Clipboard, both directions.
+alias clip='clip.exe'
+paste() {
+  powershell.exe -NoProfile -Command Get-Clipboard 2>/dev/null | tr -d '\r'
+}
+
+# Open a file or URL with the Windows default application.
+open() {
+  if [ -e "${1-}" ]; then
+    explorer.exe "$(wslpath -w "$1")"
+  else
+    powershell.exe -NoProfile -Command "Start-Process '$1'" >/dev/null 2>&1
+  fi
+}
+
+# Convert between path styles without remembering the flags.
+alias winpath='wslpath -w'
+alias lxpath='wslpath -u'
+
+# ---------- The /mnt/c performance cliff ----------
+# Files under /mnt/c are served over the 9p protocol by a Windows service.
+# Every stat crosses a process boundary, and the cost is not subtle: an
+# `npm install` on /mnt/c takes several times longer than the same install on
+# the Linux filesystem, and file watchers frequently miss events entirely.
+#
+# Keep working files under $HOME, and reach them from Windows via the
+# \\wsl$\<distro>\ UNC path or through the VS Code WSL extension. This warning
+# fires when a shell starts inside a mount, because the symptom (things are
+# slow) rarely points at the cause.
+case "$PWD" in
+  /mnt/*)
+    printf '\033[33mnote:\033[0m working under %s. File I/O here is slow and file watching is unreliable.\n' "$PWD" >&2
+    printf '      Prefer ~/ and open it from Windows as \\\\wsl$\\%s\\home\\%s\n' "${WSL_DISTRO_NAME:-Ubuntu}" "$USER" >&2
+    ;;
+esac
+
+# ---------- Local overrides ----------
+[ -r "$HOME/.bashrc.local" ] && . "$HOME/.bashrc.local"
