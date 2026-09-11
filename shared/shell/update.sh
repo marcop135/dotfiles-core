@@ -1,5 +1,5 @@
 # shellcheck shell=sh
-# Update npm and the platform's package manager in one command.
+# Update npm, pipx, and the platform's package managers in one command.
 #
 # Chaining them with `&&` means the first failure hides the rest. `run_step`
 # records a failure and carries on; `run_step_summary` says which ones failed.
@@ -56,9 +56,26 @@ update_npm() {
   npm update -g
 }
 
+update_pipx() {
+  command -v pipx >/dev/null 2>&1 || { echo "pipx not installed, skipping."; return 0; }
+  pipx upgrade-all
+}
+
 update_brew() {
   command -v brew >/dev/null 2>&1 || { echo "brew not installed, skipping."; return 0; }
   brew update && brew upgrade && brew cleanup
+}
+
+# Casks are GUI applications, and `brew upgrade` alone leaves them behind.
+update_brew_cask() {
+  command -v brew >/dev/null 2>&1 || { echo "brew not installed, skipping."; return 0; }
+  brew upgrade --cask
+}
+
+# Mac App Store applications. mas is not installed by default: `brew install mas`.
+update_mas() {
+  command -v mas >/dev/null 2>&1 || { echo "mas not installed, skipping."; return 0; }
+  mas upgrade
 }
 
 update_winget() {
@@ -72,6 +89,17 @@ update_winget() {
     --accept-source-agreements --accept-package-agreements --include-unknown
 }
 
+update_choco() {
+  command -v choco.exe >/dev/null 2>&1 || command -v choco >/dev/null 2>&1 || {
+    echo "choco not available, skipping."
+    return 0
+  }
+  # Chocolatey writes under ProgramData, so this needs an elevated shell. From a
+  # normal one the step fails, run_step records it, and the rest of the run
+  # continues, which is the point of the harness.
+  choco.exe upgrade all -y
+}
+
 update_apt() {
   command -v apt-get >/dev/null 2>&1 || { echo "apt not available, skipping."; return 0; }
   sudo apt-get update &&
@@ -81,15 +109,23 @@ update_apt() {
 }
 
 # ---------- Combined run ----------
-# npm first because it is fast and fails cheaply; the OS-level manager last
-# because it may prompt for a password.
+# The language-level managers first because they are fast and fail cheaply; the
+# OS-level ones last because they may prompt for a password or for elevation.
 update_all() {
   run_step_reset
   run_step 'npm' update_npm
+  run_step 'pipx' update_pipx
 
   case "$(uname -s 2>/dev/null)" in
-    Darwin) run_step 'brew' update_brew ;;
-    MINGW* | MSYS* | CYGWIN*) run_step 'winget' update_winget ;;
+    Darwin)
+      run_step 'brew' update_brew
+      run_step 'brew --cask' update_brew_cask
+      run_step 'mas' update_mas
+      ;;
+    MINGW* | MSYS* | CYGWIN*)
+      run_step 'winget' update_winget
+      run_step 'choco' update_choco
+      ;;
     *) run_step 'apt' update_apt ;;
   esac
 
