@@ -11,8 +11,8 @@ change that needs action on a machine already using this.
 - `update_all` also updates pipx packages, Homebrew casks, Mac App Store apps,
   and Chocolatey packages. A manager that is not installed is skipped.
 - Claude Code denies its own credentials file, raw sockets and SSH tunnels,
-  `.env` reads through `head`, `tail`, and `less`, and pushes to `main`,
-  `master`, and `develop`.
+  `.env` reads through `head`, `tail`, and `less`, and pushes to `main` and
+  `develop`.
 - Claude Code auto mode is off, as bypass-permissions mode already was.
 
 Both files are symlinked, so an installed machine needs no action.

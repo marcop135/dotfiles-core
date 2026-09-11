@@ -227,7 +227,7 @@ It also:
 - denies `rm -rf`
 - denies raw sockets and outbound tunnels
 - denies common history-rewriting commands
-- denies pushes to `main`, `master`, and `develop`
+- denies pushes to `main` and `develop`
 
 The deny rules are a safety floor, not a security sandbox.
 
