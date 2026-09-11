@@ -8,16 +8,15 @@ change that needs action on a machine already using this.
 
 ### Added
 
-- `update_pipx`, `update_brew_cask`, `update_mas`, and `update_choco` in
-  `shared/shell/update.sh`, each a no-op when its manager is absent, and all
-  four wired into `update_all` for the platform they apply to.
-- Claude Code deny rules for the credentials file, raw sockets and outbound
-  tunnels, `.env` reads through `head`, `tail`, and `less`, and pushes to
-  `main`, `master`, and `develop`.
-- Claude Code auto mode is disabled alongside bypass-permissions mode.
+- `update_all` also updates pipx packages, Homebrew casks, Mac App Store apps,
+  and Chocolatey packages. A manager that is not installed is skipped.
+- Claude Code denies its own credentials file, raw sockets and SSH tunnels,
+  `.env` reads through `head`, `tail`, and `less`, and pushes to `main` and
+  `develop`.
+- A session can no longer be switched into Claude Code's auto mode, which stops
+  asking before it acts. Bypass-permissions mode was already blocked this way.
 
-Both files are already symlinked, so an existing machine picks this up on the
-next shell and the next session with no re-install.
+Both files are symlinked, so an installed machine needs no action.
 
 ## [1.0.0] - 2026-08-30
 
