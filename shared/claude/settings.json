@@ -10,18 +10,37 @@
   "permissions": {
     "defaultMode": "acceptEdits",
     "disableBypassPermissionsMode": "disable",
+    "disableAutoMode": "disable",
     "deny": [
       "Read(//**/.env)",
       "Read(//**/.env.*)",
       "Read(//**/secrets/**)",
       "Read(~/.ssh/**)",
+      "Read(~/.claude/.credentials.json)",
       "Bash(cat *.env*)",
+      "Bash(head *.env*)",
+      "Bash(tail *.env*)",
+      "Bash(less *.env*)",
+      "Bash(cat *secrets/*)",
+      "Bash(cat *.ssh/*)",
+      "Bash(nc *)",
+      "Bash(ncat *)",
+      "Bash(netcat *)",
+      "Bash(socat *)",
+      "Bash(ssh -R *)",
+      "Bash(ssh -D *)",
       "Bash(rm -rf *)",
       "Bash(git commit --amend *)",
       "Bash(git rebase *)",
       "Bash(git push --force *)",
       "Bash(git push -f *)",
-      "Bash(git push --force-with-lease *)"
+      "Bash(git push --force-with-lease *)",
+      "Bash(git push origin main *)",
+      "Bash(git push origin master *)",
+      "Bash(git push origin develop *)",
+      "Bash(git push upstream main *)",
+      "Bash(git push upstream master *)",
+      "Bash(git push upstream develop *)"
     ]
   }
 }
