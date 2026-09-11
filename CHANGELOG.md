@@ -13,7 +13,8 @@ change that needs action on a machine already using this.
 - Claude Code denies its own credentials file, raw sockets and SSH tunnels,
   `.env` reads through `head`, `tail`, and `less`, and pushes to `main` and
   `develop`.
-- Claude Code auto mode is off, as bypass-permissions mode already was.
+- A session can no longer be switched into Claude Code's auto mode, which stops
+  asking before it acts. Bypass-permissions mode was already blocked this way.
 
 Both files are symlinked, so an installed machine needs no action.
 
