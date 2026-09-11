@@ -140,6 +140,7 @@ The shared shell layer lives in `shared/shell/` and is loaded by the POSIX shell
 | `extract <file>` | Extract common archive formats                        |
 | `ff <pattern>`   | Recursive search, skipping `.git`                     |
 | `sizes [dir]`    | Show entries ordered by size                          |
+| `update_all`     | Update npm, pipx, and the platform's package managers |
 
 ### Aliases
 
@@ -219,11 +220,14 @@ It also:
 - prevents automatic commit trailers
 - enables `acceptEdits`, while commands still require approval
 - disables bypass-permissions mode
+- disables auto mode
 - denies `.env` files
 - denies `secrets/` directories
-- denies `~/.ssh`
+- denies `~/.ssh` and the Claude credentials file
 - denies `rm -rf`
+- denies raw sockets and outbound tunnels
 - denies common history-rewriting commands
+- denies pushes to `main`, `master`, and `develop`
 
 The deny rules are a safety floor, not a security sandbox.
 
