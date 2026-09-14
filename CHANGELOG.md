@@ -4,6 +4,20 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning: [semver](https://semver.org/spec/v2.0.0.html), where major means a
 change that needs action on a machine already using this.
 
+## [Unreleased]
+
+### Changed
+
+- The Claude Code instructions hold a written file to the same density as a
+  reply: a README, changelog, release note, or PR body grows by replacing
+  rather than appending.
+- They also ask for the local server URL in the final message, a rebuild before
+  a change is called visible, a worktree rather than a second repository, and
+  the integration branch as the place a task ends.
+- The README links Starship once, where it is first named.
+
+The instructions file is symlinked, so an installed machine needs no action.
+
 ## [1.1.0] - 2026-09-11
 
 ### Added

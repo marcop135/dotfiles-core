@@ -48,7 +48,7 @@ Not included:
   - bash on WSL
   - PowerShell on Windows
 
-[Starship](https://starship.rs) is optional. Without it, the shell uses its normal prompt.
+Starship is optional. Without it, the shell uses its normal prompt.
 
 Windows symlinks require permission to create them. Enable Developer Mode, or run the installer from an elevated shell. The installers report this requirement when it is missing.
 
@@ -155,7 +155,7 @@ The shared shell layer lives in `shared/shell/` and is loaded by the POSIX shell
 
 ## Prompt
 
-[Starship](https://starship.rs) is configured to stay quiet outside projects.
+Starship is configured to stay quiet outside projects.
 
 Language versions appear only in projects that use them. Git information appears only inside repositories.
 
