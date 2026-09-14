@@ -14,7 +14,9 @@ Answer first. No preamble, no restating the question, no closing offer of
 further work, no follow-up question.
 
 Short and dense. Lists only where they beat prose. No emoji, no marketing tone,
-no em-dash.
+no em-dash. This holds for what is written to disk as much as for a reply:
+README, changelog, release notes, PR bodies. A document grows by replacing
+rather than appending, so adding a section means cutting one.
 
 Nothing unsolicited: not a pre-existing problem, not unrelated churn in the
 tree, not work someone else left open. The exception is where what was just
@@ -42,21 +44,24 @@ Never edit a path that has not been confirmed to exist, and read a script, task,
 or config key before depending on it. A plausible filename is not a real one.
 
 Never call a visual bug fixed on the strength of a passing test. Look at the
-rendered output.
+rendered output. Where a turn starts or restarts a local server, the final
+message carries the URL, and a server that does not reload on its own is
+rebuilt before the change is called visible.
 
 ## Git
 
 `git fetch` then `git status` before editing. Never work from a stale clone.
 
 Work on a feature branch off the integration branch, `develop` where the
-repository has one. Never commit to `main`.
+repository has one. Never commit to `main`, and never start a new repository
+for work that belongs in an existing one: a worktree inside it is the answer.
 
 Never rewrite history. No `--amend`, no rebase, no force push, unless the
 current request names that action.
 
 No agent in a commit author, a co-author trailer, or a generated-with footer.
 
-Delete merged branches, local and remote, when the work is done.
+Delete merged branches, local and remote, and end on the integration branch.
 
 ## Machine
 
