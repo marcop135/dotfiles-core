@@ -1,0 +1,13 @@
+# Blank issues are off so the two forms above stay the only routes in, and the
+# three links below carry everything that is not a defect.
+blank_issues_enabled: false
+contact_links:
+  - name: Install or configuration help
+    url: https://github.com/marcop135/dotfiles-core/discussions/categories/q-a
+    about: A machine that will not cooperate. Bring the doctor output.
+  - name: Ideas and general discussion
+    url: https://github.com/marcop135/dotfiles-core/discussions/categories/ideas
+    about: Talk a change through before opening a request for it.
+  - name: Report a credential or personal detail
+    url: https://github.com/marcop135/dotfiles-core/security/advisories/new
+    about: Private vulnerability reporting, so the finding is not published before it is removed.

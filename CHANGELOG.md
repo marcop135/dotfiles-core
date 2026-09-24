@@ -6,6 +6,16 @@ change that needs action on a machine already using this.
 
 ## [Unreleased]
 
+### Added
+
+- `CONTRIBUTING.md`, `SUPPORT.md`, and a Contributor Covenant
+  `CODE_OF_CONDUCT.md`.
+- Issue forms for a bug and a change request, both asking which platform and
+  shell, a chooser that turns blank issues off and routes questions to
+  Discussions, and a pull request template that asks where the change was
+  exercised.
+- `SECURITY.md` now names the supported version and the reply window.
+
 ### Changed
 
 - The Claude Code instructions hold a written file to the same density as a
