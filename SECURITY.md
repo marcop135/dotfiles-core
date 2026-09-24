@@ -1,5 +1,9 @@
 # Security
 
+Only the latest release is supported. Installed files are symlinks into a
+clone, so updating is `git pull` and a re-run of the installer, and there is no
+older version left on a machine to patch separately.
+
 Both installers and both bootstrap scripts take a dry run by default: nothing
 changes until you pass `--apply`, and reading the plan first is what the default
 is for. Nothing is ever deleted, only backed up.
@@ -16,4 +20,7 @@ to a shell, and no instruction in it will ever ask you to.
 
 For a credential, token, or personal detail found in the tree or the history,
 use GitHub's private vulnerability reporting rather than opening an issue, so
-the finding is not published before it is removed.
+the finding is not published before it is removed. Expect an acknowledgement
+within seven days. This is a personal repository, so that is a habit rather
+than a service level, and anything credential-shaped is treated as urgent
+regardless.
