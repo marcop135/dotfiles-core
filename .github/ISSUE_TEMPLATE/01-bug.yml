@@ -1,0 +1,81 @@
+# Numbered so the two forms keep their order on the chooser page.
+name: Bug report
+description: A manifest, installer, doctor, or shell fragment behaving wrongly
+title: '[bug]: '
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For a machine that will not cooperate rather than a defect in the
+        repository, start with SUPPORT.md. For a credential or personal detail
+        found in the tree, use private vulnerability reporting instead of this
+        form.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you saw, and what you expected instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The commands you ran, in order.
+      render: shell
+      placeholder: |
+        bash ./scripts/install.sh --status
+        bash ./scripts/install.sh
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Platform and shell
+      options:
+        - macOS, zsh
+        - Windows, Git Bash
+        - Windows, PowerShell
+        - WSL, bash
+        - More than one of the above
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part
+      options:
+        - Installer (install.sh or install.ps1)
+        - Doctor (doctor.sh or doctor.ps1)
+        - The gate (check.sh)
+        - Manifest (modules.conf)
+        - Shared shell layer, functions, or aliases
+        - Prompt (starship)
+        - Git configuration
+        - Claude Code configuration
+        - Bootstrap (macOS or WSL)
+        - Documentation
+        - Something else
+    validations:
+      required: true
+
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Doctor output
+      description: The output of ./scripts/doctor.sh, or .\scripts\doctor.ps1 on PowerShell.
+      render: text
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Release tag, or the commit you are on.
+      placeholder: v1.1.0
+    validations:
+      required: true
