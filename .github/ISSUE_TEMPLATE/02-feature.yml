@@ -1,0 +1,48 @@
+name: Change request
+description: A new link, function, alias, or behaviour
+title: '[change]: '
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is a personal configuration repository published in the open, so
+        the bar is portability and restraint rather than feature count. An idea
+        you would rather talk through first belongs in Discussions.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What is awkward today, on which machine.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: The change
+      description: What you would add or alter, and where in the tree it lives.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: platforms
+    attributes:
+      label: Platforms it has to hold on
+      options:
+        - label: macOS, zsh
+        - label: Windows, Git Bash
+        - label: Windows, PowerShell
+        - label: WSL, bash
+
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Constraints
+      description: See AGENTS.md for the full contract.
+      options:
+        - label: It needs no language runtime, package manager, or other new dependency.
+          required: true
+        - label: It works on bash 3.2, which is what macOS ships, or it lives in a file that bash 3.2 never reads.
+          required: true

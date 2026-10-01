@@ -1,8 +1,10 @@
-![zsh on macOS, bash on WSL, bash and PowerShell on Windows, all four linked back to one repository: 3 platforms, 4 shells, 11 symlinks](.github/social-preview.png)
+![~/.dotfiles-core: zsh on macOS, bash on WSL, bash and PowerShell on Windows, all four linked back to one repository: 3 platforms, 4 shells, 11 symlinks](.github/brand/readme.png)
 
 # dotfiles-core
 
 [![ci](https://github.com/marcop135/dotfiles-core/actions/workflows/ci.yml/badge.svg)](https://github.com/marcop135/dotfiles-core/actions/workflows/ci.yml)
+[![release](https://img.shields.io/github/v/release/marcop135/dotfiles-core?label=release)](https://github.com/marcop135/dotfiles-core/releases/latest)
+[![license](https://img.shields.io/github/license/marcop135/dotfiles-core)](LICENSE)
 
 Cross-platform dotfiles for macOS, Windows, Git Bash, and WSL. This is the core: the part every machine shares. Identity, employer, and machine-specific configuration stays local.
 
@@ -48,7 +50,7 @@ Not included:
   - bash on WSL
   - PowerShell on Windows
 
-[Starship](https://starship.rs) is optional. Without it, the shell uses its normal prompt.
+Starship is optional. Without it, the shell uses its normal prompt.
 
 Windows symlinks require permission to create them. Enable Developer Mode, or run the installer from an elevated shell. The installers report this requirement when it is missing.
 
@@ -155,7 +157,7 @@ The shared shell layer lives in `shared/shell/` and is loaded by the POSIX shell
 
 ## Prompt
 
-[Starship](https://starship.rs) is configured to stay quiet outside projects.
+Starship is configured to stay quiet outside projects.
 
 Language versions appear only in projects that use them. Git information appears only inside repositories.
 
@@ -314,22 +316,14 @@ CI runs the installation lifecycle on macOS, Ubuntu, and Windows. Ubuntu is used
 
 ## Contributing
 
-Changes should preserve portability across the supported environments.
-
-Before opening a pull request:
+Changes should preserve portability across the supported environments. Before opening a pull request:
 
 ```sh
 bash ./scripts/check.sh
 bash ./scripts/test-install.sh
 ```
 
-For changes to installation behavior, test the relevant installer in dry-run mode first.
-
-New modules should be added to `scripts/modules.conf` so the installers and validation tooling continue to share the same source of truth.
-
-Keep credentials, identities, employer-specific configuration, and other machine-specific data out of tracked files.
-
-[AGENTS.md](AGENTS.md) is the working contract behind these rules: the constraints every change holds to, and what the manifest owns. [SECURITY.md](SECURITY.md) covers what the scripts do and do not do to a machine, and how to report a credential found in the tree. Notable changes are recorded in [CHANGELOG.md](CHANGELOG.md).
+[CONTRIBUTING.md](CONTRIBUTING.md) has the rest: the constraints a change holds to, the manifest rule, and the branch model. [AGENTS.md](AGENTS.md) is the working contract behind them. [SECURITY.md](SECURITY.md) covers what the scripts do and do not do to a machine, and how to report a credential found in the tree. [SUPPORT.md](SUPPORT.md) is for a machine that will not cooperate. Notable changes are recorded in [CHANGELOG.md](CHANGELOG.md).
 
 ## Repository layout
 

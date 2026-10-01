@@ -1,0 +1,3 @@
+# Brand images
+
+`readme.svg`, `social.svg`, and `og.svg` are the sources for `readme.png` (the README image, 2560x1280), `social.png` (the GitHub social preview, 1280x640, uploaded by hand in GitHub Settings > Social preview), and `og.png` (Open Graph, 1200x630), as listed in `brand.config.json`. Render them from the repository root with `npx -y -p playwright@1.61.1 -p sharp@0.35.4 node .github/brand/render.mjs`; add `--check` to re-render in memory and exit 1 if any source or output is stale. The fonts are Catamaran, Cabin, and Roboto Mono under the SIL Open Font License 1.1 (texts in `fonts/`). `render.mjs`, `embed-fonts.mjs`, `tokens.json`, and `fonts/` are vendored from the marcopontili.com repo-brand kit: do not edit them here.
