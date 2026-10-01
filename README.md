@@ -1,4 +1,4 @@
-![zsh on macOS, bash on WSL, bash and PowerShell on Windows, all four linked back to one repository: 3 platforms, 4 shells, 11 symlinks](.github/social-preview.png)
+![~/.dotfiles-core: zsh on macOS, bash on WSL, bash and PowerShell on Windows, all four linked back to one repository: 3 platforms, 4 shells, 11 symlinks](.github/brand/readme.png)
 
 # dotfiles-core
 

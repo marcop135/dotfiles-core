@@ -15,6 +15,8 @@ change that needs action on a machine already using this.
   Discussions, and a pull request template that asks where the change was
   exercised.
 - `SECURITY.md` now names the supported version and the reply window.
+- README, Open Graph, and GitHub social preview images in `.github/brand/`,
+  rendered from SVG sources in Catamaran, Cabin, and Roboto Mono.
 
 ### Changed
 
@@ -25,6 +27,8 @@ change that needs action on a machine already using this.
   a change is called visible, a worktree rather than a second repository, and
   the integration branch as the place a task ends.
 - The README links Starship once, where it is first named.
+- The README image is `.github/brand/readme.png`; the old social preview SVG
+  and PNG under `.github/` are removed.
 
 The instructions file is symlinked, so an installed machine needs no action.
 
