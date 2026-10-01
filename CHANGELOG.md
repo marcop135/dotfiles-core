@@ -4,7 +4,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning: [semver](https://semver.org/spec/v2.0.0.html), where major means a
 change that needs action on a machine already using this.
 
-## [Unreleased]
+## [1.2.0] - 2026-10-01
 
 ### Added
 
@@ -50,5 +50,6 @@ Both files are symlinked, so an installed machine needs no action.
 
 First public version.
 
+[1.2.0]: https://github.com/marcop135/dotfiles-core/releases/tag/v1.2.0
 [1.1.0]: https://github.com/marcop135/dotfiles-core/releases/tag/v1.1.0
 [1.0.0]: https://github.com/marcop135/dotfiles-core/releases/tag/v1.0.0

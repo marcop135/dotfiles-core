@@ -76,6 +76,6 @@ body:
     attributes:
       label: Version
       description: Release tag, or the commit you are on.
-      placeholder: v1.1.0
+      placeholder: v1.2.0
     validations:
       required: true
