@@ -9,7 +9,7 @@
 
 ### Added
 
-- [`CONTRIBUTING.md`](https://github.com/marcop135/dotfiles-core/blob/develop/CONTRIBUTING.md), `SUPPORT.md`, and a Contributor Covenant
+- [`CONTRIBUTING.md`](https://github.com/marcop135/dotfiles-core/blob/develop/CONTRIBUTING.md), [`SUPPORT.md`](https://github.com/marcop135/dotfiles-core/blob/develop/SUPPORT.md), and a Contributor Covenant
 - Issue forms for a bug and a change request, both asking which platform and
 - [`SECURITY.md`](https://github.com/marcop135/dotfiles-core/blob/develop/SECURITY.md) now names the supported version and the reply window.
 - README, Open Graph, and GitHub social preview images in [`.github/brand/`](https://github.com/marcop135/dotfiles-core/blob/develop/.github/brand/),
