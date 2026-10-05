@@ -9,17 +9,17 @@
 
 ### Added
 
-- `CONTRIBUTING.md`, `SUPPORT.md`, and a Contributor Covenant
+- [`CONTRIBUTING.md`](https://github.com/marcop135/dotfiles-core/blob/develop/CONTRIBUTING.md), `SUPPORT.md`, and a Contributor Covenant
 - Issue forms for a bug and a change request, both asking which platform and
-- `SECURITY.md` now names the supported version and the reply window.
-- README, Open Graph, and GitHub social preview images in `.github/brand/`,
+- [`SECURITY.md`](https://github.com/marcop135/dotfiles-core/blob/develop/SECURITY.md) now names the supported version and the reply window.
+- README, Open Graph, and GitHub social preview images in [`.github/brand/`](https://github.com/marcop135/dotfiles-core/blob/develop/.github/brand/),
 
 ### Changed
 
 - The Claude Code instructions hold a written file to the same density as a
 - They also ask for the local server URL in the final message, a rebuild before
 - The README links Starship once, where it is first named.
-- The README image is `.github/brand/readme.png`; the old social preview SVG
+- The README image is [`.github/brand/readme.png`](https://github.com/marcop135/dotfiles-core/blob/develop/.github/brand/readme.png); the old social preview SVG
 
 ## [1.1.0] - 2026-09-11
 
