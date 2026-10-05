@@ -5,6 +5,14 @@
 - **Length:** Keep each bullet on one line, max 120 characters (link URLs do not count toward the cap, only the visible text does).
 - **Links:** Add inline markdown links for related PRs, docs, and external references when they help the reader.
 
+## [Unreleased]
+
+## [1.2.1] - 2026-10-05
+
+### Changed
+
+- Standardize the changelog on Keep a Changelog sections with Format/Voice/Length/Links preamble and inline links.
+
 ## [1.2.0] - 2026-10-01
 
 ### Added
