@@ -7,6 +7,15 @@
 
 ## [Unreleased]
 
+### Added
+
+- Override Git for Windows `bell-style visible` so Tab completion no longer flashes Windows Terminal.
+- Widen the Claude Code deny floor: enumerated `.env` secrets, keys, `~/.claude.json`, force-push shapes, `master`, and `gh api` ref writes.
+
+### Changed
+
+- Document the private-to-core promotion bar under Constraints in [`AGENTS.md`](AGENTS.md).
+
 ## [1.2.1] - 2026-10-05
 
 ### Changed
