@@ -7,6 +7,18 @@
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-10-15
+
+### Added
+
+- Override Git for Windows `bell-style visible` so Tab completion no longer flashes Windows Terminal ([#15](https://github.com/marcop135/dotfiles-core/pull/15)).
+- Widen the Claude Code deny floor for secret env files, keys, force-push, `master`, and `gh api` ref writes ([#15](https://github.com/marcop135/dotfiles-core/pull/15)).
+
+### Changed
+
+- Document the private-to-core promotion bar under Constraints in [`AGENTS.md`](https://github.com/marcop135/dotfiles-core/blob/develop/AGENTS.md) ([#15](https://github.com/marcop135/dotfiles-core/pull/15)).
+- Refresh README, social, and Open Graph brand images under [`.github/brand/`](https://github.com/marcop135/dotfiles-core/tree/develop/.github/brand).
+
 ## [1.2.1] - 2026-10-05
 
 ### Changed

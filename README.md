@@ -223,13 +223,12 @@ It also:
 - enables `acceptEdits`, while commands still require approval
 - disables bypass-permissions mode
 - disables auto mode
-- denies `.env` files
-- denies `secrets/` directories
-- denies `~/.ssh` and the Claude credentials file
-- denies `rm -rf`
-- denies raw sockets and outbound tunnels
-- denies common history-rewriting commands
-- denies pushes to `main` and `develop`
+- denies secret `.env` spellings (not `.env.example`), keys, and `secrets/`
+- denies `~/.ssh`, `~/.claude.json`, and the Claude credentials file
+- denies `rm -rf` and recursive `Remove-Item`
+- denies raw sockets, outbound tunnels, and `gh api` ref-write routes
+- denies history rewrites and force-push at any flag position
+- denies pushes to `main`, `master`, and `develop`
 
 The deny rules are a safety floor, not a security sandbox.
 
