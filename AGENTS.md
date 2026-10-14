@@ -41,8 +41,9 @@ change; the gate fails if a path named there stops existing.
   A bashism belongs in the platform rc file instead.
 - **No dependencies.** No language runtime, no package manager, no `jq`. A
   repository that configures shells should not need one to check itself. This is
-  what keeps `shared/claude/` to two declarative files: hooks, a statusline
-  command, and agent scripts would all drag a runtime in behind them.
+  what keeps `shared/claude/` to two declarative files: a change proven in a
+  denser private tree lands here only when it needs no runtime, names no
+  identity or machine path, and is correct without hooks, skills, or MCP.
 - **LF only**, enforced by `.gitattributes`. A CRLF in a sourced file is a
   syntax error.
 - **Nothing private in a tracked file.** No identity, token, employer name, or
