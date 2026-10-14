@@ -31,6 +31,12 @@ shopt -s globstar 2>/dev/null || true     # ** matches across directories.
 # force-closed terminal does not take the session's history with it.
 PROMPT_COMMAND="history -a${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
 
+# ---------- Readline ----------
+# Git for Windows ships `set bell-style visible` in /etc/inputrc. Tab
+# completion rings that visual bell and Windows Terminal flashes the
+# screen (mintty ignores it, so stock Git Bash hides the bug).
+bind 'set bell-style none' 2>/dev/null || true
+
 # ---------- Native Windows binaries ----------
 # Some Windows CLIs have no MSYS build, and calling the bare name either finds
 # nothing or finds an MSYS shim that behaves differently. Pointing at the .exe
