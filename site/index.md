@@ -68,7 +68,7 @@ Needs `git` and one supported shell. Starship is optional. Windows symlinks need
 
 ### What does it need to run?
 
-Git and one supported shell: zsh on macOS, Git Bash or PowerShell on Windows, bash on WSL. There is no language runtime and no package manager to install.
+Git and one supported shell: zsh on macOS, Git Bash or PowerShell on Windows, bash on WSL. No runtime or package manager to install.
 
 ### What is not included?
 

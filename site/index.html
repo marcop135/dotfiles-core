@@ -15,7 +15,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <link rel="preload" href="/fonts/roboto-mono-v31-latin-700.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/styles.acfc2ef1.css">
+  <link rel="stylesheet" href="/styles.ec38ec0c.css">
   <title>dotfiles-core: one shell setup for macOS, Windows, and WSL</title>
   <meta name="description" content="Cross-platform dotfiles for zsh, bash, Git Bash, and PowerShell. One shared sh layer, one manifest, symlinks into your home folder.">
   <link rel="canonical" href="https://dotfiles.marcopontili.com/">
@@ -177,8 +177,8 @@
       <div class="shell hero-grid">
         <div>
           <p class="eyebrow">Cross-platform dotfiles, MIT licensed</p>
-          <h1 id="hero-title" class="headline">One shell setup for <em>macOS, Windows, and WSL</em>.</h1>
-          <p class="lede">Four shells read the same shared <code>sh</code> layer, one manifest decides what is linked where, and the repository stays the source of truth on every machine. Configuration stops drifting between the Mac and the Windows box.</p>
+          <h1 id="hero-title" class="headline">One shell setup for <em>macOS, Windows, and WSL</em></h1>
+          <p class="lede">Four shells share one <code>sh</code> layer, and one manifest decides what gets linked where. The Mac and the Windows box stop drifting apart.</p>
           <div class="cta">
             <a class="btn btn-primary" href="https://github.com/marcop135/dotfiles-core">
               <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
@@ -220,7 +220,7 @@
         <div class="section-head">
           <span class="section-kicker">scripts/modules.conf</span>
           <h2 id="manifest-title" class="section-title">One manifest, three home folders</h2>
-          <p class="section-lede">A single flat file decides what gets linked where. Both installers and the check script read it, so adding a link to every machine is one line. Files are linked, not copied, and the repository stays the source of truth after install.</p>
+          <p class="section-lede">Both installers and the check script read one flat file, so adding a link to every machine is one line. Files are linked, not copied.</p>
         </div>
 
         <div class="fan">
@@ -322,7 +322,7 @@
         <div class="shared-layer">
           <div>
             <h3>What the shared layer gives every POSIX shell</h3>
-            <p>Functions and aliases you stop rewriting per machine. Starship stays quiet outside projects, and the theme follows the OS appearance.</p>
+            <p>Write a function once and use it on every machine. Starship stays quiet outside projects.</p>
           </div>
           <dl class="fn-list">
             <div><dt>mkcd &lt;dir&gt;</dt><dd>Create a directory and enter it</dd></div>
@@ -423,7 +423,7 @@ cd ~/code/dotfiles-core
         <div class="faq">
           <details open>
             <summary>What does it need to run?</summary>
-            <p>Git and one supported shell: zsh on macOS, Git Bash or PowerShell on Windows, bash on WSL. There is no language runtime and no package manager to install, and the check script needs nothing either.</p>
+            <p>Git and one supported shell: zsh on macOS, Git Bash or PowerShell on Windows, bash on WSL. No runtime or package manager to install.</p>
           </details>
           <details>
             <summary>What is not included?</summary>
