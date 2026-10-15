@@ -44,7 +44,7 @@
       <rect x="20" y="25" width="11.25" height="3.75" rx="1.25" fill="#FB923C"/>
     </g>
     <text class="name" x="80" y="362"><tspan fill="#38BDF8">~/</tspan>.dotfiles-core</text>
-    <text class="tag" x="80" y="422" data-fit-w="560">One shell setup for <tspan fill="#38BDF8">macOS, Windows, and WSL</tspan></text>
+    <text class="tag" x="80" y="422" data-fit-w="560">One shell setup for <tspan dx="5" fill="#38BDF8">macOS, Windows, and WSL</tspan></text>
 
     <g aria-label="Terminal prompt">
       <rect x="750" y="218" width="400" height="228" rx="24" fill="#0A101F" stroke="#243450" stroke-width="3"/>
