@@ -170,10 +170,10 @@ pre {
 h1,
 h2,
 h3 {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
   margin: 0;
 }
 
