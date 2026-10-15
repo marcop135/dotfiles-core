@@ -1,4 +1,4 @@
-![~/.dotfiles-core: One shell setup for macOS, Windows, and WSL. The installer's dry run in a terminal; 3 platforms, 4 shells, 11 symlinks.](.github/brand/readme.png)
+![~/.dotfiles-core: One shell setup for macOS, Windows, and WSL. A terminal running the installer.](.github/brand/readme.png)
 
 # dotfiles-core
 
