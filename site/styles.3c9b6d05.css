@@ -622,6 +622,11 @@ figure {
   margin-bottom: var(--space-7);
 }
 
+.section-head--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
 .section-kicker {
   display: block;
   margin-bottom: var(--space-3);
