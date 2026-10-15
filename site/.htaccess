@@ -1,0 +1,79 @@
+# dotfiles.marcopontili.com on Apache (Netsons), behind Cloudflare.
+# Headers mirror the wp-agent-harness netlify.toml set, plus the self-hosted
+# Matomo origin in the CSP. These rules do not run under `php -S`.
+
+Options -Indexes -MultiViews
+DirectoryIndex index.html
+AddDefaultCharset utf-8
+
+ErrorDocument 404 /404.html
+ErrorDocument 500 /500.html
+
+# ---------- HTTPS ----------
+# Cloudflare terminates TLS in front of the origin and sends X-Forwarded-Proto,
+# so both are checked to avoid a redirect loop.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# ---------- Types ----------
+<IfModule mod_mime.c>
+  AddType text/markdown .md
+  AddType application/manifest+json .webmanifest
+  AddType font/woff2 .woff2
+  AddType image/svg+xml .svg
+  AddType image/x-icon .ico
+  AddCharset utf-8 .html .css .js .md .txt .xml .webmanifest
+</IfModule>
+
+<Files "api-catalog">
+  ForceType "application/linkset+json; charset=utf-8"
+</Files>
+
+<Files "security.txt">
+  ForceType "text/plain; charset=utf-8"
+</Files>
+
+# ---------- Security headers ----------
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  Header always set Cross-Origin-Resource-Policy "same-origin"
+  Header always set Content-Language "en"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://mt.marcopontili.com; connect-src 'self' https://mt.marcopontili.com; img-src 'self' https://mt.marcopontili.com; style-src 'self'; font-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+  Header unset X-Powered-By
+
+  # Agent discovery on the home page.
+  <If "%{REQUEST_URI} == '/' || %{REQUEST_URI} == '/index.html'">
+    Header set Link "</index.md>; rel=\"alternate\"; type=\"text/markdown\", </llms.txt>; rel=\"alternate\"; type=\"text/plain\"; title=\"llms.txt\", </sitemap.xml>; rel=\"sitemap\"; type=\"application/xml\", </.well-known/security.txt>; rel=\"securitytxt\", </.well-known/api-catalog>; rel=\"api-catalog\""
+  </If>
+</IfModule>
+
+# ---------- Caching ----------
+<IfModule mod_headers.c>
+  # HTML, Markdown, and text: always revalidate.
+  Header set Cache-Control "public, max-age=0, must-revalidate"
+
+  # Hashed CSS and JS, fonts, and images never change under one name.
+  <FilesMatch "^(styles|app)\.[0-9a-f]{8}\.(css|js)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(woff2|png|svg|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "^(site\.webmanifest|security\.txt|api-catalog)$">
+    Header set Cache-Control "public, max-age=86400"
+  </FilesMatch>
+</IfModule>
+
+# ---------- Compression ----------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/markdown text/xml application/javascript text/javascript application/json application/xml application/manifest+json application/linkset+json image/svg+xml
+</IfModule>

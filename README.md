@@ -6,6 +6,8 @@
 [![release](https://img.shields.io/github/v/release/marcop135/dotfiles-core?label=release)](https://github.com/marcop135/dotfiles-core/releases/latest)
 [![license](https://img.shields.io/github/license/marcop135/dotfiles-core)](LICENSE)
 
+Website: [dotfiles.marcopontili.com](https://dotfiles.marcopontili.com)
+
 Cross-platform dotfiles for macOS, Windows, Git Bash, and WSL. This is the core: the part every machine shares. Identity, employer, and machine-specific configuration stays local.
 
 One shared `sh` layer, platform-specific shell entrypoints, one manifest, and symlinks into your home directory. Configuration stays in one repository instead of drifting across machines.
@@ -307,6 +309,7 @@ Restore the backups while unlinking:
 | `.\scripts\doctor.ps1`           | Diagnose common Windows configuration problems                                 |
 | `bash ./scripts/check.sh`        | Validate the manifest, file tree, Markdown, shell syntax, and ShellCheck        |
 | `bash ./scripts/test-install.sh` | Test apply, unlink, and restore against a throwaway home directory             |
+| `bash ./scripts/check-site.sh`   | Validate `site/` structure and internal links                                  |
 | `.\scripts\test-install.ps1`     | The same test for the PowerShell installer, `prompt` module only               |
 | `./macos/bootstrap.sh`           | Bootstrap Homebrew, CLI tools, nvm, and Starship on a fresh Mac                |
 | `./wsl/bootstrap.sh`             | Bootstrap packages, nvm, and Starship on a fresh WSL distribution              |
@@ -355,6 +358,7 @@ bash ./scripts/test-install.sh
 │   ├── modules.conf
 │   ├── test-install.sh
 │   └── test-install.ps1
+├── site/
 └── LICENSE
 ```
 
