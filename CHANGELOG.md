@@ -7,6 +7,13 @@
 
 ## [Unreleased]
 
+### Added
+
+- Add the static site for [dotfiles.marcopontili.com](https://dotfiles.marcopontili.com) under `site/`, with privacy page and cookieless Matomo.
+- Add `site/.htaccess` with security headers, a CSP limited to self and `mt.marcopontili.com`, caching, and error pages.
+- Add `deploy.yml` to mirror `site/` to Netsons over SFTP or FTPS on push to `main`, then purge the Cloudflare host cache.
+- Add `scripts/check-site.sh` for page structure and internal links, run by CI and before every deploy.
+
 ## [1.3.0] - 2026-10-15
 
 ### Added
