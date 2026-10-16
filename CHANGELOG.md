@@ -5,6 +5,12 @@
 - **Length:** Keep each bullet on one line, max 120 characters (link URLs do not count toward the cap, only the visible text does).
 - **Links:** Add inline markdown links for related PRs, docs, and external references when they help the reader.
 
+## [1.4.2] - 2026-10-16
+
+### Fixed
+
+- Report site analytics to its own self-hosted Matomo property instead of the shared one.
+
 ## [1.4.1] - 2026-10-16
 
 ### Changed
