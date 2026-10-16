@@ -1,0 +1,30 @@
+# dotfiles-core
+
+> dotfiles-core: cross-platform dotfiles for macOS, Windows (Git Bash and PowerShell), and WSL. One shared POSIX sh layer, four shell entry points, one manifest, symlinks into the home folder.
+
+Canonical site: https://dotfiles.marcopontili.com/
+Repository: https://github.com/marcop135/dotfiles-core
+
+## Primary
+
+- [Home](https://dotfiles.marcopontili.com/): Product page with the manifest, the four shells, and the quick start
+- [Markdown home](https://dotfiles.marcopontili.com/index.md): Same content as plain Markdown
+- [Privacy](https://dotfiles.marcopontili.com/privacy.html): Privacy policy for this website
+- [GitHub repository](https://github.com/marcop135/dotfiles-core): Source, installers, CI
+
+## Docs on GitHub
+
+- [README](https://github.com/marcop135/dotfiles-core#readme): Install, manifest, shell functions, local overrides
+- [AGENTS.md](https://github.com/marcop135/dotfiles-core/blob/main/AGENTS.md): Working contract and constraints
+- [CONTRIBUTING.md](https://github.com/marcop135/dotfiles-core/blob/main/CONTRIBUTING.md): Gate, manifest rule, branch model
+- [SECURITY.md](https://github.com/marcop135/dotfiles-core/blob/main/SECURITY.md): What the scripts do to a machine
+- [CHANGELOG.md](https://github.com/marcop135/dotfiles-core/blob/main/CHANGELOG.md): Release notes
+
+## Facts agents should not invent
+
+- Platforms: macOS (zsh), Windows (Git Bash and PowerShell), WSL (bash). 3 platforms, 4 shells, 11 symlinks.
+- `scripts/modules.conf` is the only manifest; `scripts/install.sh`, `scripts/install.ps1`, and `scripts/check.sh` all read it.
+- Installers are a dry run by default; `--apply` (or `-Apply` in PowerShell) is the only thing that writes.
+- Nothing is deleted: an existing target is renamed to `<target>.bak.<timestamp>`.
+- No Git identity, employer, or machine-specific configuration is tracked; it goes in untracked `*.local` files.
+- No dependencies beyond git and a supported shell. Starship is optional.

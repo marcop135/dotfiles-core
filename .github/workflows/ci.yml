@@ -53,6 +53,12 @@ jobs:
         # language runtime that the thing it configures does not.
         run: bash ./scripts/check.sh
 
+      - name: site structure and internal links
+        # The page at dotfiles.marcopontili.com is deployed from site/ as is,
+        # with no build step to catch a broken link or an unclosed element.
+        # Same rule as the gate above: a shell script, nothing installed.
+        run: bash ./scripts/check-site.sh
+
   install:
     # macOS is a first-class target here, not a courtesy entry. It is the
     # platform this repository is least often edited from, so it is the one
