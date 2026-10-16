@@ -5,7 +5,14 @@
 - **Length:** Keep each bullet on one line, max 120 characters (link URLs do not count toward the cap, only the visible text does).
 - **Links:** Add inline markdown links for related PRs, docs, and external references when they help the reader.
 
-## [Unreleased]
+## [1.4.0] - 2026-10-16
+
+### Added
+
+- Add the static site for [dotfiles.marcopontili.com](https://dotfiles.marcopontili.com) under `site/`, with privacy page and cookieless Matomo ([#18](https://github.com/marcop135/dotfiles-core/pull/18)).
+- Add `site/.htaccess` with security headers, a CSP limited to self and self-hosted Matomo, caching, and error pages.
+- Add `deploy.yml` to mirror `site/` to Netsons over SFTP or FTPS on push to `main`, then purge the Cloudflare host cache.
+- Add `scripts/check-site.sh` for page structure and internal links, run by CI and before every deploy ([#18](https://github.com/marcop135/dotfiles-core/pull/18)).
 
 ## [1.3.0] - 2026-10-15
 

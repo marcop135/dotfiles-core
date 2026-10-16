@@ -13,9 +13,11 @@ bash ./scripts/check.sh
 Exit 0 or the change is not done. It validates the manifest, every relative
 markdown link, every repository path named in the markdown, every runnable
 script being named by the markdown, shellcheck at severity error, and a parse
-pass over every shell file. There is no other test command and no build step. CI runs the same script, and additionally applies,
-unlinks, and restores the real installers against a throwaway home directory on
-macOS, Ubuntu, and Windows.
+pass over every shell file. A change under `site/` also passes
+`bash ./scripts/check-site.sh`: page structure, internal links, and no inline
+style or script. There is no other test command and no build step. CI runs both
+scripts, and additionally applies, unlinks, and restores the real installers
+against a throwaway home directory on macOS, Ubuntu, and Windows.
 
 ## Single source of truth
 
@@ -70,6 +72,7 @@ Nothing is ever deleted. A target that already exists is renamed to
     windows/        bashrc, bash_profile, PowerShell profile, starship
     wsl/            bashrc, bootstrap, wsl.conf examples
     scripts/        installers, doctors, install tests, the gate, the manifest
+    site/           static page for dotfiles.marcopontili.com, deployed from main
 
 Every script's header block is its usage, and `-h` prints it. The PowerShell
 scripts use comment-based help, so `Get-Help` covers those.

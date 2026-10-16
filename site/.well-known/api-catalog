@@ -1,0 +1,14 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://dotfiles.marcopontili.com/",
+      "item": [
+        { "href": "https://dotfiles.marcopontili.com/", "type": "text/html", "title": "dotfiles-core home" },
+        { "href": "https://dotfiles.marcopontili.com/index.md", "type": "text/markdown", "title": "Markdown home" },
+        { "href": "https://dotfiles.marcopontili.com/llms.txt", "type": "text/plain", "title": "llms.txt" },
+        { "href": "https://dotfiles.marcopontili.com/privacy.html", "type": "text/html", "title": "Privacy" },
+        { "href": "https://dotfiles.marcopontili.com/sitemap.xml", "type": "application/xml", "title": "Sitemap" }
+      ]
+    }
+  ]
+}
