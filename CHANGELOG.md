@@ -5,6 +5,12 @@
 - **Length:** Keep each bullet on one line, max 120 characters (link URLs do not count toward the cap, only the visible text does).
 - **Links:** Add inline markdown links for related PRs, docs, and external references when they help the reader.
 
+## [1.4.1] - 2026-10-16
+
+### Changed
+
+- Shorten the brand image tagline to "One shell for macOS, Win, and WSL" in the README, social, and Open Graph images.
+
 ## [1.4.0] - 2026-10-16
 
 ### Added
