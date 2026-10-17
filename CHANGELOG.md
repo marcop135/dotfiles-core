@@ -5,6 +5,20 @@
 - **Length:** Keep each bullet on one line, max 120 characters (link URLs do not count toward the cap, only the visible text does).
 - **Links:** Add inline markdown links for related PRs, docs, and external references when they help the reader.
 
+## [1.5.1] - 2026-10-17
+
+### Changed
+
+- Fold the README's Claude Code settings list into a collapsible details block.
+- Merge the README install steps into one POSIX block and one PowerShell block, as on the site.
+- Restructure the README contributing section into the gate commands and a table of the project documents.
+- Add the PowerShell update and uninstall commands to the README.
+- List the missing aliases and `scripts/check-site.sh` in the README.
+
+### Removed
+
+- Remove the CI, release, and license badges from the README.
+
 ## [1.5.0] - 2026-10-17
 
 ### Added
