@@ -15,7 +15,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <link rel="preload" href="/fonts/roboto-mono-v31-latin-700.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/styles.3c9b6d05.css">
+  <link rel="stylesheet" href="/styles.3f65db38.css">
   <title>dotfiles-core: one shell setup for macOS, Windows, and WSL</title>
   <meta name="description" content="Cross-platform dotfiles for zsh, bash, Git Bash, and PowerShell. One shared sh layer, one manifest, symlinks into your home folder.">
   <link rel="canonical" href="https://dotfiles.marcopontili.com/">
@@ -78,7 +78,7 @@
         "width": 1200,
         "height": 630
       },
-      "dateModified": "2026-10-15",
+      "dateModified": "2026-10-17",
       "inLanguage": "en"
     },
     {
@@ -108,26 +108,18 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "What is dotfiles-core?",
+          "name": "Why symlinks instead of copies?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "dotfiles-core is the shared part of a cross-platform dotfiles setup for macOS, Windows, and WSL. One POSIX sh layer is sourced by zsh, bash, and Git Bash, PowerShell has its own profile, and one manifest decides which file is symlinked where in the home folder."
+            "text": "The repository stays the only copy. An edit to ~/.zshrc is an edit to the repository, so git diff shows it and a git pull reaches every machine."
           }
         },
         {
           "@type": "Question",
-          "name": "What does it need to run?",
+          "name": "Where do my own aliases go?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Git and one supported shell: zsh on macOS, Git Bash or PowerShell on Windows, bash on WSL. Starship is optional. There is no language runtime and no package manager to install."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Will the installer overwrite my existing files?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. The installer is a dry run until you pass --apply, or -Apply in PowerShell. An existing file is renamed to <target>.bak.<timestamp> before a link replaces it, and nothing is ever deleted."
+            "text": "In ~/.shell.local, which zsh and both bashes read, or profile.local.ps1 next to the PowerShell profile. They load after the tracked configuration, so local values win."
           }
         },
         {
@@ -135,15 +127,31 @@
           "name": "What is not included?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Git identity, employer and client configuration, package lists, macOS system settings, and editor and terminal settings. Private and machine-specific values go in untracked .local files that every rc file sources last."
+            "text": "Git identity, employer and client configuration, package lists, macOS system settings, and editor and terminal settings. Your identity goes in ~/.gitconfig.local, which the tracked gitconfig includes."
           }
         },
         {
           "@type": "Question",
-          "name": "How do I uninstall it?",
+          "name": "How do I update it?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Run ./scripts/install.sh --unlink --restore --apply. Uninstall removes only symlinks that point into the repository and puts the backups back."
+            "text": "Run git pull, then ./scripts/install.sh --apply, or .\\scripts\\install.ps1 -Apply in PowerShell. Links already in place are left alone; new ones get added."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I see what is linked?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Run ./scripts/install.sh --status, or -Status in PowerShell. doctor.sh and doctor.ps1 catch the problems that fail silently, such as missing symlink rights on Windows."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does the Claude Code part do?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It links CLAUDE.md and settings.json. The settings turn off telemetry and auto-update, keep commands behind approval, and deny secret files, rm -rf, force-push, and pushes to main. A safety floor, not a sandbox."
           }
         }
       ]
@@ -193,7 +201,7 @@
           </dl>
         </div>
 
-        <figure class="term" aria-labelledby="hero-term-caption">
+        <figure class="term" aria-labelledby="hero-term-caption" data-play>
           <figcaption id="hero-term-caption" class="term-bar">
             <span class="term-dots" aria-hidden="true"><span></span><span></span><span></span></span>
             zsh on macOS: the installer's dry run
@@ -220,10 +228,10 @@
         <div class="section-head section-head--center">
           <span class="section-kicker">scripts/modules.conf</span>
           <h2 id="manifest-title" class="section-title">One manifest, three home folders</h2>
-          <p class="section-lede">Both installers and the check script read one flat file, so adding a link to every machine is one line. Files are linked, not copied.</p>
+          <p class="section-lede">Both installers read one flat file. Files are linked, not copied.</p>
         </div>
 
-        <div class="fan">
+        <div class="fan" data-play>
           <div class="manifest">
             <figure class="term" aria-labelledby="manifest-caption">
               <figcaption id="manifest-caption" class="term-bar">
@@ -289,7 +297,7 @@
         <div class="section-head">
           <span class="section-kicker">shared/shell/</span>
           <h2 id="shells-title" class="section-title">Four shells, one shared layer</h2>
-          <p class="section-lede">The POSIX shells source the same <code>sh</code> files, so a function written once works in zsh on the Mac and in bash on Windows and WSL. PowerShell cannot source POSIX shell configuration, so it gets its own profile.</p>
+          <p class="section-lede">zsh and both bashes source the same <code>sh</code> files. PowerShell gets its own profile.</p>
         </div>
 
         <ul class="shells">
@@ -318,25 +326,6 @@
             <p class="shell-layer">own profile, same prompt</p>
           </li>
         </ul>
-
-        <div class="shared-layer">
-          <div>
-            <h3>What the shared layer gives every POSIX shell</h3>
-            <p>Write a function once and use it on every machine. Starship stays quiet outside projects.</p>
-          </div>
-          <dl class="fn-list">
-            <div><dt>mkcd &lt;dir&gt;</dt><dd>Create a directory and enter it</dd></div>
-            <div><dt>up 3</dt><dd>Move up three directory levels</dd></div>
-            <div><dt>groot</dt><dd>Jump to the repository root</dd></div>
-            <div><dt>path</dt><dd>Print <code>PATH</code>, one entry per line</dd></div>
-            <div><dt>port 3000</dt><dd>Find the process using a port</dd></div>
-            <div><dt>serve [port]</dt><dd>Serve the current directory over HTTP</dd></div>
-            <div><dt>extract &lt;file&gt;</dt><dd>Extract common archive formats</dd></div>
-            <div><dt>ff &lt;pattern&gt;</dt><dd>Recursive search, skipping <code>.git</code></dd></div>
-            <div><dt>sizes [dir]</dt><dd>Show entries ordered by size</dd></div>
-            <div><dt>update_all</dt><dd>Update npm, pipx, and the platform's package managers</dd></div>
-          </dl>
-        </div>
       </div>
     </section>
 
@@ -418,28 +407,32 @@ cd ~/code/dotfiles-core
     <section class="section" id="faq" aria-labelledby="faq-title">
       <div class="shell">
         <div class="section-head">
-          <h2 id="faq-title" class="section-title">Questions</h2>
+          <h2 id="faq-title" class="section-title">Questions answered</h2>
         </div>
         <div class="faq">
           <details open>
-            <summary>What does it need to run?</summary>
-            <p>Git and one supported shell: zsh on macOS, Git Bash or PowerShell on Windows, bash on WSL. No runtime or package manager to install.</p>
+            <summary>Why symlinks instead of copies?</summary>
+            <p>The repository stays the only copy. An edit to <code>~/.zshrc</code> is an edit to the repository, so <code>git diff</code> shows it and a <code>git pull</code> reaches every machine.</p>
+          </details>
+          <details>
+            <summary>Where do my own aliases go?</summary>
+            <p>In <code>~/.shell.local</code>, which zsh and both bashes read, or <code>profile.local.ps1</code> next to the PowerShell profile. They load after the tracked configuration, so local values win.</p>
           </details>
           <details>
             <summary>What is not included?</summary>
-            <p>Git identity, employer and client configuration, package lists, macOS system settings, and editor and terminal settings. Put your identity in <code>~/.gitconfig.local</code> and anything private in the <code>.local</code> files.</p>
+            <p>Git identity, employer and client configuration, package lists, macOS system settings, and editor and terminal settings. Your identity goes in <code>~/.gitconfig.local</code>, which the tracked gitconfig includes.</p>
           </details>
           <details>
             <summary>How do I update it?</summary>
-            <p>Run <code>git pull</code> and <code>./scripts/install.sh --apply</code> again. The installer is idempotent: existing links stay as they are and new configuration gets linked.</p>
+            <p>Run <code>git pull</code>, then <code>./scripts/install.sh --apply</code>, or <code>.\scripts\install.ps1 -Apply</code> in PowerShell. Links already in place are left alone; new ones get added.</p>
           </details>
           <details>
-            <summary>How do I uninstall it?</summary>
-            <p>Run <code>./scripts/install.sh --unlink --restore --apply</code>. It removes only the symlinks that point into the repository and puts the backups back.</p>
+            <summary>How do I see what is linked?</summary>
+            <p>Run <code>./scripts/install.sh --status</code>, or <code>-Status</code> in PowerShell. <code>doctor.sh</code> and <code>doctor.ps1</code> catch the problems that fail silently, such as missing symlink rights on Windows.</p>
           </details>
           <details>
             <summary>What does the Claude Code part do?</summary>
-            <p>It links two user-level files, <code>CLAUDE.md</code> and <code>settings.json</code>. The settings turn off telemetry and the auto-updater, keep commands behind approval, and deny secret files, force-push, and pushes to <code>main</code>. The deny rules are a safety floor, not a sandbox.</p>
+            <p>It links <code>CLAUDE.md</code> and <code>settings.json</code>. The settings turn off telemetry and auto-update, keep commands behind approval, and deny secret files, <code>rm -rf</code>, force-push, and pushes to <code>main</code>. A safety floor, not a sandbox.</p>
           </details>
         </div>
       </div>
@@ -448,18 +441,18 @@ cd ~/code/dotfiles-core
 
   <footer class="site-footer">
     <div class="shell site-footer-inner">
-      <p>MIT licensed. Built by <a href="https://marcopontili.com">Marco Pontili</a>.</p>
+      <p>Built and maintained by <a href="https://marcopontili.com">Marco Pontili</a></p>
       <nav aria-label="Footer">
         <ul>
-          <li><a href="https://github.com/marcop135/dotfiles-core">GitHub</a></li>
+          <li><a href="https://github.com/marcop135/dotfiles-core">Source on GitHub</a></li>
+          <li><a href="https://github.com/marcop135/dotfiles-core/blob/main/LICENSE">MIT License</a></li>
           <li><a href="/privacy.html">Privacy</a></li>
           <li><a href="/llms.txt">llms.txt</a></li>
-          <li><a href="/index.md">Markdown</a></li>
         </ul>
       </nav>
     </div>
   </footer>
   <noscript><img class="pixel" src="https://mt.marcopontili.com/m/?idsite=8&amp;rec=1" alt="" width="1" height="1" referrerpolicy="no-referrer-when-downgrade"></noscript>
-  <script src="/app.3e5a24a1.js" defer></script>
+  <script src="/app.f8aaf6bc.js" defer></script>
 </body>
 </html>
