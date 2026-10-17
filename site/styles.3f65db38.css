@@ -592,6 +592,14 @@ figure {
   }
 }
 
+/* With scripting, motion waits until the whole figure is on screen. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  [data-play]:not(.in-view) *,
+  [data-play]:not(.in-view) *::after {
+    animation-play-state: paused;
+  }
+}
+
 @keyframes type {
   to {
     width: 20ch;
@@ -755,7 +763,7 @@ figure {
 }
 
 .links .from::before {
-  content: "\2190  ";
+  content: "\2190\00a0\00a0";
   color: var(--accent);
 }
 
@@ -770,29 +778,14 @@ figure {
   color: var(--accent);
 }
 
-/* Narrow: the bus runs left to a trunk, an elbow into each card */
+/* Narrow: one drop from the manifest into the stacked cards, no bus */
 @media (max-width: 59.99rem) {
   .fan-targets {
-    padding-left: var(--space-5);
+    padding-top: var(--space-5);
   }
 
   .fan-targets::after {
-    left: var(--space-2);
-    width: calc(50% - var(--space-2));
-  }
-
-  .target::before {
-    left: calc(-1 * var(--space-5) + var(--space-2));
-    top: calc(-1 * var(--space-5) - 1px);
-    width: calc(var(--space-5) - var(--space-2));
-    height: calc(var(--space-5) + 1.75rem);
-    border-left: var(--wire-w) solid var(--wire);
-    border-bottom: var(--wire-w) solid var(--wire);
-  }
-
-  .target:first-child::before {
-    top: calc(-1 * (var(--space-7) - var(--space-5)) - 1px);
-    height: calc(var(--space-7) - var(--space-5) + 1.75rem);
+    content: none;
   }
 }
 
@@ -939,66 +932,6 @@ figure {
   color: var(--muted);
   font-family: var(--font-mono);
   font-size: 0.8125rem;
-}
-
-.shared-layer {
-  display: grid;
-  gap: var(--space-6);
-  margin-top: var(--space-7);
-  padding: var(--space-6);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-l);
-  background: var(--bg-raised);
-}
-
-@media (min-width: 60rem) {
-  .shared-layer {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-    align-items: start;
-  }
-}
-
-.shared-layer h3 {
-  font-size: 1.25rem;
-}
-
-.shared-layer p {
-  margin-top: var(--space-3);
-  color: var(--muted);
-}
-
-.fn-list {
-  display: grid;
-  gap: 0;
-  margin: 0;
-}
-
-@media (min-width: 40rem) {
-  .fn-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: var(--space-6);
-  }
-}
-
-.fn-list div {
-  display: grid;
-  grid-template-columns: 7.5rem minmax(0, 1fr);
-  gap: var(--space-3);
-  padding-block: var(--space-2);
-  border-bottom: 1px solid var(--line);
-  font-size: 0.9375rem;
-}
-
-.fn-list dt {
-  color: var(--accent);
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  font-weight: 700;
-}
-
-.fn-list dd {
-  margin: 0;
-  color: var(--muted);
 }
 
 /* ---------- Safety ---------- */
@@ -1156,6 +1089,11 @@ figure {
   background: var(--panel);
 }
 
+/* Only while app.js animates the height, so the focus ring is never clipped */
+.faq details.is-animating {
+  overflow: hidden;
+}
+
 .faq summary {
   display: flex;
   align-items: center;
@@ -1176,13 +1114,31 @@ figure {
 
 .faq summary::after {
   content: "+";
+  flex: none;
   color: var(--accent);
   font-size: 1.25rem;
   line-height: 1;
 }
 
 .faq details[open] summary::after {
-  content: "\2212";
+  transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .faq summary::after {
+    transition: transform 0.25s ease;
+  }
+
+  .faq details[open] p {
+    animation: faq-in 0.3s ease-out;
+  }
+}
+
+@keyframes faq-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.375rem);
+  }
 }
 
 .faq details p {
@@ -1288,6 +1244,39 @@ figure {
 
 .site-footer li:first-child a {
   padding-left: 0;
+}
+
+.site-footer p a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+.site-footer [aria-current="page"] {
+  color: var(--text);
+  text-decoration: none;
+}
+
+/* Narrow: author line on top, links in an even two-column grid */
+@media (max-width: 39.99rem) {
+  .site-footer-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
+
+  .site-footer ul {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    gap: 0 var(--space-6);
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--line);
+  }
+
+  .site-footer li a {
+    padding-inline: 0;
+    white-space: nowrap;
+  }
 }
 
 .pixel {

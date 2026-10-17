@@ -5,6 +5,24 @@
 - **Length:** Keep each bullet on one line, max 120 characters (link URLs do not count toward the cap, only the visible text does).
 - **Links:** Add inline markdown links for related PRs, docs, and external references when they help the reader.
 
+## [1.5.0] - 2026-10-17
+
+### Added
+
+- Add three site FAQ entries on local aliases, link status, and why the files are symlinked.
+- Animate the site FAQ answers as they open and close, skipped under reduced motion.
+
+### Changed
+
+- Start the site's terminal and manifest animations only once the figure is fully on screen.
+- Match the site footer to the other project sites, with a two-column link grid on phones.
+- Replace the broken connector lines in the site manifest diagram on phones with one drop into the cards.
+- Trim the site copy and rename the FAQ to "Questions answered", aligned with the README.
+
+### Removed
+
+- Remove the shared-function list from the site; the README keeps the full table.
+
 ## [1.4.2] - 2026-10-16
 
 ### Fixed

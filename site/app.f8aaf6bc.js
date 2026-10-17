@@ -1,4 +1,5 @@
-/* dotfiles.marcopontili.com: cookieless analytics and the copy buttons. */
+/* dotfiles.marcopontili.com: cookieless analytics, the copy buttons, the FAQ
+   accordion, and motion that waits for its figure to be fully on screen. */
 
 /* Self-hosted Matomo at mt.marcopontili.com: no cookies, Do Not Track honoured. */
 var _paq = (window._paq = window._paq || []);
@@ -81,6 +82,73 @@ _paq.push(['enableLinkTracking']);
         button.removeAttribute('data-state');
         label.textContent = 'Copy';
       }, 2000);
+    });
+  });
+})();
+
+/* Start each [data-play] animation once the whole figure is visible, or, for a
+   figure taller than the viewport, once it fills most of it. Pausing lives in
+   the stylesheet. */
+(function () {
+  var pending = Array.prototype.slice.call(document.querySelectorAll('[data-play]'));
+  if (!pending.length) return;
+  var queued = false;
+
+  function check() {
+    queued = false;
+    var room = window.innerHeight;
+    pending = pending.filter(function (el) {
+      var box = el.getBoundingClientRect();
+      var shown = Math.min(box.bottom, room) - Math.max(box.top, 0);
+      if (shown < Math.min(box.height - 2, room * 0.85)) return true;
+      el.classList.add('in-view');
+      return false;
+    });
+    if (!pending.length) {
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+    }
+  }
+
+  function schedule() {
+    if (queued) return;
+    queued = true;
+    window.requestAnimationFrame(check);
+  }
+
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);
+  check();
+})();
+
+/* FAQ: animate the height of each answer as it opens and closes. */
+(function () {
+  var motion = window.matchMedia('(prefers-reduced-motion: no-preference)');
+  if (!('animate' in Element.prototype)) return;
+
+  Array.prototype.forEach.call(document.querySelectorAll('.faq details'), function (item) {
+    var summary = item.querySelector('summary');
+    var running = null;
+    var closing = false;
+
+    summary.addEventListener('click', function (event) {
+      if (!motion.matches) return;
+      event.preventDefault();
+      closing = running ? !closing : item.open;
+      var from = item.offsetHeight;
+      if (running) running.cancel();
+      item.open = true;
+      item.classList.add('is-animating');
+      var to = closing ? summary.offsetHeight + 2 : item.offsetHeight;
+      running = item.animate(
+        { height: [from + 'px', to + 'px'] },
+        { duration: 260, easing: 'cubic-bezier(0.2, 0, 0, 1)' }
+      );
+      running.onfinish = function () {
+        running = null;
+        item.classList.remove('is-animating');
+        if (closing) item.open = false;
+      };
     });
   });
 })();

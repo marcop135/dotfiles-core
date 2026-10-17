@@ -2,7 +2,7 @@
 title: "dotfiles-core: one shell setup for macOS, Windows, and WSL"
 canonical: https://dotfiles.marcopontili.com/
 description: Cross-platform dotfiles for zsh, bash, Git Bash, and PowerShell. One shared sh layer, one manifest, symlinks into your home folder.
-dateModified: 2026-10-15
+dateModified: 2026-10-17
 ---
 
 # dotfiles-core
@@ -33,8 +33,6 @@ dateModified: 2026-10-15
 
 The POSIX shells source `shared/shell/`. PowerShell has its own entry point because it cannot source POSIX shell configuration.
 
-Shared functions: `mkcd`, `up`, `groot`, `path`, `port`, `serve`, `extract`, `ff`, `sizes`, `update_all`.
-
 ## Safe to run on a machine you care about
 
 - Dry run by default. Only `--apply`, or `-Apply` in PowerShell, writes anything.
@@ -64,27 +62,31 @@ cd ~/code/dotfiles-core
 
 Needs `git` and one supported shell. Starship is optional. Windows symlinks need Developer Mode or an elevated shell.
 
-## Questions
+## Questions answered
 
-### What does it need to run?
+### Why symlinks instead of copies?
 
-Git and one supported shell: zsh on macOS, Git Bash or PowerShell on Windows, bash on WSL. No runtime or package manager to install.
+The repository stays the only copy. An edit to `~/.zshrc` is an edit to the repository, so `git diff` shows it and a `git pull` reaches every machine.
+
+### Where do my own aliases go?
+
+In `~/.shell.local`, which zsh and both bashes read, or `profile.local.ps1` next to the PowerShell profile. They load after the tracked configuration, so local values win.
 
 ### What is not included?
 
-Git identity, employer and client configuration, package lists, macOS system settings, and editor and terminal settings.
+Git identity, employer and client configuration, package lists, macOS system settings, and editor and terminal settings. Your identity goes in `~/.gitconfig.local`, which the tracked gitconfig includes.
 
 ### How do I update it?
 
-Run `git pull` and `./scripts/install.sh --apply` again. The installer is idempotent.
+Run `git pull`, then `./scripts/install.sh --apply`, or `.\scripts\install.ps1 -Apply` in PowerShell. Links already in place are left alone; new ones get added.
 
-### How do I uninstall it?
+### How do I see what is linked?
 
-Run `./scripts/install.sh --unlink --restore --apply`. It removes only the symlinks that point into the repository and puts the backups back.
+Run `./scripts/install.sh --status`, or `-Status` in PowerShell. `doctor.sh` and `doctor.ps1` catch the problems that fail silently, such as missing symlink rights on Windows.
 
 ### What does the Claude Code part do?
 
-It links two user-level files, `CLAUDE.md` and `settings.json`. The settings turn off telemetry and the auto-updater, keep commands behind approval, and deny secret files, force-push, and pushes to `main`. The deny rules are a safety floor, not a sandbox.
+It links `CLAUDE.md` and `settings.json`. The settings turn off telemetry and auto-update, keep commands behind approval, and deny secret files, `rm -rf`, force-push, and pushes to `main`. A safety floor, not a sandbox.
 
 ## Links
 
