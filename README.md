@@ -2,15 +2,15 @@
 
 # dotfiles-core
 
-[![ci](https://github.com/marcop135/dotfiles-core/actions/workflows/ci.yml/badge.svg)](https://github.com/marcop135/dotfiles-core/actions/workflows/ci.yml)
-[![release](https://img.shields.io/github/v/release/marcop135/dotfiles-core?label=release)](https://github.com/marcop135/dotfiles-core/releases/latest)
-[![license](https://img.shields.io/github/license/marcop135/dotfiles-core)](LICENSE)
-
-Website: [dotfiles.marcopontili.com](https://dotfiles.marcopontili.com)
-
 Cross-platform dotfiles for macOS, Windows, Git Bash, and WSL. This is the core: the part every machine shares. Identity, employer, and machine-specific configuration stays local.
 
 One shared `sh` layer, platform-specific shell entrypoints, one manifest, and symlinks into your home directory. Configuration stays in one repository instead of drifting across machines.
+
+Overview and quick start: [dotfiles.marcopontili.com](https://dotfiles.marcopontili.com)
+
+## Why
+
+I use a Mac and a Windows machine that also runs WSL. Without a shared source of truth, shell and tool configuration gradually diverges.
 
 ## What's included
 
@@ -19,6 +19,8 @@ One shared `sh` layer, platform-specific shell entrypoints, one manifest, and sy
 - Git configuration and global ignores
 - Claude Code user configuration
 - Local override points for machine-specific and private configuration
+
+Not included: Git identity, employer and client configuration, package lists, macOS system settings, and editor and terminal settings.
 
 ## Supported environments
 
@@ -31,81 +33,35 @@ One shared `sh` layer, platform-specific shell entrypoints, one manifest, and sy
 
 The POSIX shells share the same `sh` layer. PowerShell has its own entrypoint because it cannot source POSIX shell configuration.
 
-## Why
-
-I use a Mac and a Windows machine that also runs WSL. Without a shared source of truth, shell and tool configuration gradually diverges.
-
-Not included:
-
-- Git identity
-- Employer and client configuration
-- Package lists
-- macOS system settings
-- Editor and terminal settings
-
 ## Requirements
 
-- `git`
-- One supported shell:
-  - zsh on macOS
-  - Git Bash on Windows
-  - bash on WSL
-  - PowerShell on Windows
+`git` and one of the shells above. Starship is optional; without it, the shell keeps its normal prompt.
 
-Starship is optional. Without it, the shell uses its normal prompt.
-
-Windows symlinks require permission to create them. Enable Developer Mode, or run the installer from an elevated shell. The installers report this requirement when it is missing.
+Windows symlinks need Developer Mode or an elevated shell. The installers say so when the permission is missing.
 
 ## Install
 
-Clone the repository anywhere:
+Clone the repository anywhere, read the dry run, then apply it.
+
+macOS, WSL, and Git Bash:
 
 ```sh
 git clone https://github.com/marcop135/dotfiles-core.git ~/code/dotfiles-core
 cd ~/code/dotfiles-core
+./scripts/install.sh          # dry run: print the plan
+./scripts/install.sh --apply  # create the links
 ```
 
-### macOS, WSL, and Git Bash
-
-The installer is a dry run by default:
-
-```sh
-./scripts/install.sh
-```
-
-Review the plan, then apply it:
-
-```sh
-./scripts/install.sh --apply
-```
-
-### Windows PowerShell
-
-The PowerShell installer is also a dry run by default:
+Windows PowerShell:
 
 ```powershell
-.\scripts\install.ps1
+git clone https://github.com/marcop135/dotfiles-core.git ~/code/dotfiles-core
+cd ~/code/dotfiles-core
+.\scripts\install.ps1         # dry run: print the plan
+.\scripts\install.ps1 -Apply  # create the links
 ```
 
-Review the plan, then apply it:
-
-```powershell
-.\scripts\install.ps1 -Apply
-```
-
-### Install a subset
-
-Install only one module:
-
-```sh
-./scripts/install.sh --only shell
-```
-
-Skip a module:
-
-```sh
-./scripts/install.sh --skip prompt
-```
+Install one module with `--only shell`, or skip one with `--skip prompt`. PowerShell takes `-Only` and `-Skip`.
 
 ## Installation manifest
 
@@ -148,83 +104,40 @@ The shared shell layer lives in `shared/shell/` and is loaded by the POSIX shell
 
 ### Aliases
 
-| Alias                 | Purpose                                |
-| --------------------- | -------------------------------------- |
-| `g`, `gs`, `gd`, `gl` | `git`, status, diff, and log           |
-| `..`, `...`, `....`   | Move up one, two, or three directories |
-| `-`                   | Return to the previous directory       |
-| `ll`, `la`, `l`       | Long, all-files, and normal `ls`       |
-| `cp`, `mv`            | Interactive overwrite protection       |
-| `reload`              | Restart the shell in place             |
+| Alias                 | Purpose                                          |
+| --------------------- | ------------------------------------------------ |
+| `g`, `gs`, `gd`, `gl` | `git`, status, diff, and log                     |
+| `..`, `...`, `....`   | Move up one, two, or three directories           |
+| `-`, `d`              | Return to the previous directory, list the stack |
+| `ll`, `la`, `l`       | Long, all-files, and normal `ls`                 |
+| `cp`, `mv`            | Interactive overwrite protection                 |
+| `df`, `du`            | Human-readable sizes                             |
+| `myip`                | Print the public IP address                      |
+| `reload`              | Restart the shell in place                       |
 
 ## Prompt
 
-Starship is configured to stay quiet outside projects.
+Starship is configured to stay quiet outside projects. Language versions appear only in projects that use them, and Git information only inside repositories.
 
-Language versions appear only in projects that use them. Git information appears only inside repositories.
-
-`COLORFGBG`, set at shell startup from the OS appearance, keeps `bat`, `delta`, and `less` aligned with the terminal theme.
-
-Refresh the theme without restarting the shell:
-
-```sh
-theme_refresh
-```
-
-PowerShell provides the equivalent:
-
-```powershell
-Update-Theme
-```
+`COLORFGBG`, set at shell startup from the OS appearance, keeps `bat`, `delta`, and `less` aligned with the terminal theme. Refresh it without restarting the shell with `theme_refresh`, or `Update-Theme` in PowerShell.
 
 ## Git
 
-Git configuration lives in:
-
-```text
-shared/git/gitconfig
-shared/git/ignore
-```
-
-No Git identity is stored in this repository.
-
-Put your identity in:
-
-```text
-~/.gitconfig.local
-```
-
-The tracked configuration contains portable settings and global ignores only.
+`shared/git/gitconfig` holds portable settings and `shared/git/ignore` the global ignores. No Git identity is stored in this repository; put yours in `~/.gitconfig.local`.
 
 ## Claude Code
 
-The repository includes two user-level Claude Code files:
+`CLAUDE.md` and `settings.json` are linked into `~/.claude/` as user-level defaults. A project's own `CLAUDE.md` or `AGENTS.md` is read afterward and takes precedence.
 
-```text
-shared/claude/CLAUDE.md
-shared/claude/settings.json
-```
+<details>
+<summary>What the user-level settings do</summary>
 
-They are linked to:
+`settings.json` deliberately contains no allow list: command grants stay machine-specific rather than copied from a public repository. It also:
 
-```text
-~/.claude/CLAUDE.md
-~/.claude/settings.json
-```
-
-`CLAUDE.md` contains general instructions for sessions across repositories. A project's own `CLAUDE.md` or `AGENTS.md` is read afterward and takes precedence.
-
-The user-level `settings.json` deliberately contains no allow list. Machine-specific command grants should stay machine-specific rather than being copied from a public repository.
-
-It also:
-
-- disables telemetry and error reporting
-- disables the auto-updater
-- follows the terminal theme
-- prevents automatic commit trailers
+- disables telemetry, error reporting, and the auto-updater
+- follows the terminal theme and prevents automatic commit trailers
 - enables `acceptEdits`, while commands still require approval
-- disables bypass-permissions mode
-- disables auto mode
+- disables bypass-permissions mode and auto mode
 - denies secret `.env` spellings (not `.env.example`), keys, and `secrets/`
 - denies `~/.ssh`, `~/.claude.json`, and the Claude credentials file
 - denies `rm -rf` and recursive `Remove-Item`
@@ -234,9 +147,9 @@ It also:
 
 The deny rules are a safety floor, not a security sandbox.
 
-MCP servers are intentionally not included. User-scope MCP configuration lives in `~/.claude.json`, which Claude Code manages itself.
+MCP servers, hooks, agents, skills, and a statusline are intentionally absent. MCP configuration lives in `~/.claude.json`, which Claude Code manages itself, and the rest would add runtime dependencies.
 
-Hooks, agents, skills, and a statusline are also intentionally absent. They would introduce runtime dependencies that do not belong in this base configuration.
+</details>
 
 ## Local overrides
 
@@ -261,76 +174,66 @@ Anything private, machine-specific, or employer-specific belongs in these local 
 
 ## Update
 
-Pull the repository and re-run the installer:
+Pull the repository and re-run the installer. Existing links are left alone and new configuration is linked.
 
 ```sh
 git pull
-./scripts/install.sh --apply
+./scripts/install.sh --apply      # PowerShell: .\scripts\install.ps1 -Apply
 ```
-
-The installer is idempotent. Existing links are left alone and new configuration is linked.
 
 ## Uninstall
 
-Uninstall is a dry run by default:
+`--status` shows what is linked. `--unlink` is a dry run until `--apply`, and removes only symlinks that point into this repository. `--restore` moves the newest backup back.
 
 ```sh
 ./scripts/install.sh --status
-./scripts/install.sh --unlink
-```
-
-Apply the removal with:
-
-```sh
-./scripts/install.sh --unlink --apply
-```
-
-Existing files are never deleted. Before replacing an existing target, the installer renames it to:
-
-```text
-<target>.bak.<timestamp>
-```
-
-Uninstall only removes symlinks that point into this repository.
-
-Restore the backups while unlinking:
-
-```sh
 ./scripts/install.sh --unlink --restore --apply
 ```
 
+PowerShell takes `-Status`, `-Unlink`, `-Restore`, and `-Apply`. Existing files are never deleted: before a link replaces one, the installer renames it to `<target>.bak.<timestamp>`.
+
 ## Tooling
 
-| Command                          | Purpose                                                                        |
-| -------------------------------- | ------------------------------------------------------------------------------ |
-| `./scripts/install.sh`           | Install, inspect, or unlink configuration on POSIX shells                      |
-| `.\scripts\install.ps1`          | Install, inspect, or unlink configuration from PowerShell                      |
-| `./scripts/doctor.sh`            | Diagnose common configuration problems                                         |
-| `.\scripts\doctor.ps1`           | Diagnose common Windows configuration problems                                 |
-| `bash ./scripts/check.sh`        | Validate the manifest, file tree, Markdown, shell syntax, and ShellCheck        |
-| `bash ./scripts/test-install.sh` | Test apply, unlink, and restore against a throwaway home directory             |
-| `bash ./scripts/check-site.sh`   | Validate `site/` structure and internal links                                  |
-| `.\scripts\test-install.ps1`     | The same test for the PowerShell installer, `prompt` module only               |
-| `./macos/bootstrap.sh`           | Bootstrap Homebrew, CLI tools, nvm, and Starship on a fresh Mac                |
-| `./wsl/bootstrap.sh`             | Bootstrap packages, nvm, and Starship on a fresh WSL distribution              |
+| Command                          | Purpose                                                                  |
+| -------------------------------- | ------------------------------------------------------------------------ |
+| `./scripts/install.sh`           | Install, inspect, or unlink configuration on POSIX shells                |
+| `.\scripts\install.ps1`          | Install, inspect, or unlink configuration from PowerShell                |
+| `./scripts/doctor.sh`            | Diagnose common configuration problems                                   |
+| `.\scripts\doctor.ps1`           | Diagnose common Windows configuration problems                           |
+| `bash ./scripts/check.sh`        | Validate the manifest, file tree, Markdown, shell syntax, and ShellCheck |
+| `bash ./scripts/check-site.sh`   | Validate `site/` structure and internal links                            |
+| `bash ./scripts/test-install.sh` | Test apply, unlink, and restore against a throwaway home directory       |
+| `.\scripts\test-install.ps1`     | The same test for the PowerShell installer, `prompt` module only         |
+| `./macos/bootstrap.sh`           | Bootstrap Homebrew, CLI tools, nvm, and Starship on a fresh Mac          |
+| `./wsl/bootstrap.sh`             | Bootstrap packages, nvm, and Starship on a fresh WSL distribution        |
 
-CI runs the installation lifecycle on macOS, Ubuntu, and Windows. Ubuntu is used as the WSL-equivalent environment because GitHub Actions does not provide a WSL runner.
+CI runs the installation lifecycle on macOS, Ubuntu, and Windows. Ubuntu stands in for WSL because GitHub Actions has no WSL runner.
 
 ## Contributing
 
-Changes should preserve portability across the supported environments. Before opening a pull request:
+A change has to keep working on every supported platform. Before opening a pull request, run the gate:
 
 ```sh
-bash ./scripts/check.sh
-bash ./scripts/test-install.sh
+bash ./scripts/check.sh         # every change
+bash ./scripts/test-install.sh  # every change
+bash ./scripts/check-site.sh    # a change under site/
 ```
 
-[CONTRIBUTING.md](CONTRIBUTING.md) has the rest: the constraints a change holds to, the manifest rule, and the branch model. [AGENTS.md](AGENTS.md) is the working contract behind them. [SECURITY.md](SECURITY.md) covers what the scripts do and do not do to a machine, and how to report a credential found in the tree. [SUPPORT.md](SUPPORT.md) is for a machine that will not cooperate. Notable changes are recorded in [CHANGELOG.md](CHANGELOG.md).
+A change to the PowerShell installer also runs `.\scripts\test-install.ps1`.
+
+| Document                           | Covers                                                 |
+| ---------------------------------- | ------------------------------------------------------ |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Constraints, adding a link, branches and pull requests |
+| [AGENTS.md](AGENTS.md)             | The full working contract behind those rules           |
+| [SECURITY.md](SECURITY.md)         | What the scripts do to a machine, reporting a leak     |
+| [SUPPORT.md](SUPPORT.md)           | Help when a machine will not cooperate                 |
+| [CHANGELOG.md](CHANGELOG.md)       | Notable changes per release                            |
 
 ## Repository layout
 
 ```text
 .
+├── .github/          CI, deploy, templates, brand images
 ├── macos/
 │   ├── bootstrap.sh
 │   └── zshrc
@@ -351,6 +254,7 @@ bash ./scripts/test-install.sh
 │   └── starship.toml
 ├── scripts/
 │   ├── check.sh
+│   ├── check-site.sh
 │   ├── doctor.sh
 │   ├── doctor.ps1
 │   ├── install.sh
@@ -358,7 +262,7 @@ bash ./scripts/test-install.sh
 │   ├── modules.conf
 │   ├── test-install.sh
 │   └── test-install.ps1
-├── site/
+├── site/             dotfiles.marcopontili.com
 └── LICENSE
 ```
 
