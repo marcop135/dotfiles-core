@@ -1,4 +1,4 @@
-![~/.dotfiles-core: One shell for macOS, Win, and WSL. A simple terminal prompt.](.github/brand/readme.png)
+[![~/.dotfiles-core: One shell for macOS, Win, and WSL. A simple terminal prompt.](.github/brand/readme.png)](https://dotfiles.marcopontili.com)
 
 # dotfiles-core
 
@@ -266,10 +266,10 @@ A change to the PowerShell installer also runs `.\scripts\test-install.ps1`.
 └── LICENSE
 ```
 
-## License
-
-[MIT](./LICENSE)
-
 ## Author
 
 [Marco Pontili](https://marcopontili.com)
+
+## License
+
+[MIT](./LICENSE)
