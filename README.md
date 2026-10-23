@@ -266,10 +266,10 @@ A change to the PowerShell installer also runs `.\scripts\test-install.ps1`.
 └── LICENSE
 ```
 
+## Author
+
+Built and maintained by [Marco Pontili](https://marcopontili.com). Project site: [dotfiles.marcopontili.com](https://dotfiles.marcopontili.com)
+
 ## License
 
 [MIT](./LICENSE)
-
-## Author
-
-[Marco Pontili](https://marcopontili.com)

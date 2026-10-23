@@ -33,12 +33,22 @@ SKIP=''
 RESTORE=false
 ACTION=install
 
+# --only and --skip take a module list. Without this check, a missing value
+# either makes `shift 2` end the script silently under `set -e`, or swallows the
+# next flag as a module name.
+need_value() {
+  if [[ -z ${2-} || ${2-} == -* ]]; then
+    echo "install.sh: $1 needs a module list, e.g. $1 shell" >&2
+    exit 2
+  fi
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --apply) APPLY=true; shift ;;
     --dry-run) APPLY=false; shift ;;
-    --only) ONLY="${2-}"; shift 2 ;;
-    --skip) SKIP="${2-}"; shift 2 ;;
+    --only) need_value "$@"; ONLY="$2"; shift 2 ;;
+    --skip) need_value "$@"; SKIP="$2"; shift 2 ;;
     --list) ACTION=list; shift ;;
     --status) ACTION=status; shift ;;
     --unlink) ACTION=unlink; shift ;;

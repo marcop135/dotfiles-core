@@ -14,6 +14,9 @@ mkcd() {
 
 # Go up N directories. `up 3` instead of `cd ../../..`.
 up() {
+  case "${1:-1}" in
+    *[!0-9]*) echo "usage: up [levels]" >&2; return 2 ;;
+  esac
   _up_count=${1:-1}
   _up_path=''
   while [ "$_up_count" -gt 0 ]; do
