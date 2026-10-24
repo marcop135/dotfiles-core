@@ -2,43 +2,34 @@
 title: "dotfiles-core: one shell setup for macOS, Windows, and WSL"
 canonical: https://dotfiles.marcopontili.com/
 description: Cross-platform dotfiles for zsh, bash, Git Bash, and PowerShell. One shared sh layer, one manifest, symlinks into your home folder.
-dateModified: 2026-10-17
+dateModified: 2026-10-24
 ---
 
 # dotfiles-core
 
-**dotfiles-core** is the shared part of a cross-platform dotfiles setup for macOS, Windows, and WSL. Four shells read the same shared `sh` layer, one manifest decides what is linked where, and the repository stays the source of truth on every machine. Identity, employer, and machine-specific configuration stays local.
+**dotfiles-core** is cross-platform dotfiles for macOS, Windows, and WSL. Four shells share one `sh` layer, and one manifest decides what gets linked where.
 
 - Repository: [github.com/marcop135/dotfiles-core](https://github.com/marcop135/dotfiles-core)
 - License: MIT
 
 ## One manifest, three home folders
 
-`scripts/modules.conf` is the single manifest read by both installers and the check script. Files are linked, not copied.
+Both installers read `scripts/modules.conf` and link, never copy. zsh and both bashes source `shared/shell/`; PowerShell has its own profile.
 
-| Platform | Shells | Links |
-| --- | --- | --- |
-| macOS | zsh | `~/.zshrc`, `~/.config/starship.toml`, `~/.gitconfig`, `~/.config/git/ignore`, `~/.claude/CLAUDE.md`, `~/.claude/settings.json` |
-| Windows | Git Bash, PowerShell | `~/.bashrc`, `~/.bash_profile`, `$PROFILE.CurrentUserAllHosts`, `~/.config/starship.toml`, `~/.gitconfig`, `~/.config/git/ignore`, `~/.claude/CLAUDE.md`, `~/.claude/settings.json` |
-| WSL | bash | `~/.bashrc`, `~/.config/starship.toml`, `~/.gitconfig`, `~/.config/git/ignore`, `~/.claude/CLAUDE.md`, `~/.claude/settings.json` |
+| Platform | Shells | Shell entry points | Links |
+| --- | --- | --- | --- |
+| macOS | zsh | `~/.zshrc` | 6 |
+| Windows | Git Bash, PowerShell | `~/.bashrc`, `~/.bash_profile`, `$PROFILE` | 7 from Git Bash, 6 from PowerShell |
+| WSL | bash | `~/.bashrc` | 6 |
 
-## Four shells, one shared layer
-
-| Platform | Shell | Entry point |
-| --- | --- | --- |
-| macOS | zsh | `macos/zshrc` |
-| Windows | Git Bash | `windows/bashrc` + `windows/bash_profile` |
-| Windows | PowerShell | `windows/Microsoft.PowerShell_profile.ps1` |
-| WSL | bash | `wsl/bashrc` |
-
-The POSIX shells source `shared/shell/`. PowerShell has its own entry point because it cannot source POSIX shell configuration.
+Plus five on every platform: `~/.config/starship.toml`, `~/.gitconfig`, `~/.config/git/ignore`, `~/.claude/CLAUDE.md`, `~/.claude/settings.json`.
 
 ## Safe to run on a machine you care about
 
-- Dry run by default. Only `--apply`, or `-Apply` in PowerShell, writes anything.
-- Nothing is deleted. An existing file is renamed to `<target>.bak.<timestamp>` before a link replaces it.
-- Private stays local. Every rc file sources an untracked `*.local` sibling last.
-- `--unlink` removes only symlinks that point into the repository; `--restore` puts the backups back.
+1. Dry run by default. Nothing is written without `--apply`, or `-Apply` in PowerShell.
+2. Nothing is deleted. An existing file moves to `<target>.bak.<timestamp>` first.
+3. Private stays local. No identity is tracked. Every rc file sources an untracked `*.local` file last.
+4. Clean uninstall. `--unlink` removes only its own links; `--restore` brings the backups back.
 
 ## Install
 
@@ -60,33 +51,25 @@ cd ~/code/dotfiles-core
 .\scripts\install.ps1 -Apply  # then link it
 ```
 
-Needs `git` and one supported shell. Starship is optional. Windows symlinks need Developer Mode or an elevated shell.
+Needs `git`. Starship is optional. Windows symlinks need Developer Mode or an elevated shell.
 
-## Questions answered
+## FAQ
 
 ### Why symlinks instead of copies?
 
-The repository stays the only copy. An edit to `~/.zshrc` is an edit to the repository, so `git diff` shows it and a `git pull` reaches every machine.
+The repository stays the only copy: an edit to `~/.zshrc` shows in `git diff`, and `git pull` reaches every machine.
 
 ### Where do my own aliases go?
 
-In `~/.shell.local`, which zsh and both bashes read, or `profile.local.ps1` next to the PowerShell profile. They load after the tracked configuration, so local values win.
-
-### What is not included?
-
-Git identity, employer and client configuration, package lists, macOS system settings, and editor and terminal settings. Your identity goes in `~/.gitconfig.local`, which the tracked gitconfig includes.
+In `~/.shell.local`, or `profile.local.ps1` next to the PowerShell profile. Both load last, so they win.
 
 ### How do I update it?
 
-Run `git pull`, then `./scripts/install.sh --apply`, or `.\scripts\install.ps1 -Apply` in PowerShell. Links already in place are left alone; new ones get added.
-
-### How do I see what is linked?
-
-Run `./scripts/install.sh --status`, or `-Status` in PowerShell. `doctor.sh` and `doctor.ps1` catch the problems that fail silently, such as missing symlink rights on Windows.
+`git pull`, then run the installer with `--apply` again. Links already in place are left alone.
 
 ### What does the Claude Code part do?
 
-It links `CLAUDE.md` and `settings.json`. The settings turn off telemetry and auto-update, keep commands behind approval, and deny secret files, `rm -rf`, force-push, and pushes to `main`. A safety floor, not a sandbox.
+It links `CLAUDE.md` and `settings.json`: telemetry and auto-update off, commands behind approval, and secret files, `rm -rf`, force-push, and pushes to `main` denied. A safety floor, not a sandbox.
 
 ## Links
 

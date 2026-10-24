@@ -100,10 +100,13 @@ paste() {
 
 # Open a file or URL with the Windows default application.
 open() {
-  if [ -e "${1-}" ]; then
+  [ -n "${1-}" ] || { echo "usage: open <path|url>" >&2; return 2; }
+  if [ -e "$1" ]; then
     explorer.exe "$(wslpath -w "$1")"
   else
-    powershell.exe -NoProfile -Command "Start-Process '$1'" >/dev/null 2>&1
+    # A single quote inside a PowerShell single-quoted string is doubled;
+    # unescaped, a URL containing one ends the string and the rest runs as code.
+    powershell.exe -NoProfile -Command "Start-Process '${1//\'/\'\'}'" >/dev/null 2>&1
   fi
 }
 

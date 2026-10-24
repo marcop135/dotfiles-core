@@ -15,7 +15,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <link rel="preload" href="/fonts/roboto-mono-v31-latin-700.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/styles.3f65db38.css">
+  <link rel="stylesheet" href="/styles.03f40d27.css">
   <title>dotfiles-core: one shell setup for macOS, Windows, and WSL</title>
   <meta name="description" content="Cross-platform dotfiles for zsh, bash, Git Bash, and PowerShell. One shared sh layer, one manifest, symlinks into your home folder.">
   <link rel="canonical" href="https://dotfiles.marcopontili.com/">
@@ -78,7 +78,7 @@
         "width": 1200,
         "height": 630
       },
-      "dateModified": "2026-10-17",
+      "dateModified": "2026-10-24",
       "inLanguage": "en"
     },
     {
@@ -111,7 +111,7 @@
           "name": "Why symlinks instead of copies?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The repository stays the only copy. An edit to ~/.zshrc is an edit to the repository, so git diff shows it and a git pull reaches every machine."
+            "text": "The repository stays the only copy: an edit to ~/.zshrc shows in git diff, and git pull reaches every machine."
           }
         },
         {
@@ -119,15 +119,7 @@
           "name": "Where do my own aliases go?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "In ~/.shell.local, which zsh and both bashes read, or profile.local.ps1 next to the PowerShell profile. They load after the tracked configuration, so local values win."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What is not included?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Git identity, employer and client configuration, package lists, macOS system settings, and editor and terminal settings. Your identity goes in ~/.gitconfig.local, which the tracked gitconfig includes."
+            "text": "In ~/.shell.local, or profile.local.ps1 next to the PowerShell profile. Both load last, so they win."
           }
         },
         {
@@ -135,15 +127,7 @@
           "name": "How do I update it?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Run git pull, then ./scripts/install.sh --apply, or .\\scripts\\install.ps1 -Apply in PowerShell. Links already in place are left alone; new ones get added."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How do I see what is linked?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Run ./scripts/install.sh --status, or -Status in PowerShell. doctor.sh and doctor.ps1 catch the problems that fail silently, such as missing symlink rights on Windows."
+            "text": "git pull, then run the installer with --apply again. Links already in place are left alone."
           }
         },
         {
@@ -151,7 +135,7 @@
           "name": "What does the Claude Code part do?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "It links CLAUDE.md and settings.json. The settings turn off telemetry and auto-update, keep commands behind approval, and deny secret files, rm -rf, force-push, and pushes to main. A safety floor, not a sandbox."
+            "text": "It links CLAUDE.md and settings.json: telemetry and auto-update off, commands behind approval, and secret files, rm -rf, force-push, and pushes to main denied. A safety floor, not a sandbox."
           }
         }
       ]
@@ -172,7 +156,7 @@
       <nav class="topnav" aria-label="Primary">
         <ul>
           <li><a class="topnav-anchor" href="#manifest">Manifest</a></li>
-          <li><a class="topnav-anchor" href="#shells">Shells</a></li>
+          <li><a class="topnav-anchor" href="#safety">Safety</a></li>
           <li><a class="topnav-anchor" href="#install">Install</a></li>
           <li><a class="topnav-gh" href="https://github.com/marcop135/dotfiles-core">GitHub</a></li>
         </ul>
@@ -186,7 +170,7 @@
         <div>
           <p class="eyebrow">Cross-platform dotfiles, MIT licensed</p>
           <h1 id="hero-title" class="headline">One shell setup for <em>macOS, Windows, and WSL</em></h1>
-          <p class="lede">Four shells share one <code>sh</code> layer, and one manifest decides what gets linked where. The Mac and the Windows box stop drifting apart.</p>
+          <p class="lede">Four shells share one <code>sh</code> layer, and one manifest decides what gets linked where.</p>
           <div class="cta">
             <a class="btn btn-primary" href="https://github.com/marcop135/dotfiles-core">
               <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
@@ -225,133 +209,90 @@
 
     <section class="section" id="manifest" aria-labelledby="manifest-title">
       <div class="shell">
-        <div class="section-head section-head--center">
+        <div class="section-head section-head--center reveal">
           <span class="section-kicker">scripts/modules.conf</span>
           <h2 id="manifest-title" class="section-title">One manifest, three home folders</h2>
-          <p class="section-lede">Both installers read one flat file. Files are linked, not copied.</p>
+          <p class="section-lede">Both installers read one flat file and link, never copy. zsh and both bashes source <code>shared/shell/</code>; PowerShell has its own profile.</p>
         </div>
 
-        <div class="fan" data-play>
-          <div class="manifest">
+        <div class="fan" data-run>
+          <div class="manifest reveal">
             <figure class="term" aria-labelledby="manifest-caption">
               <figcaption id="manifest-caption" class="term-bar">
                 <span class="term-dots" aria-hidden="true"><span></span><span></span><span></span></span>
                 scripts/modules.conf (excerpt)
               </figcaption>
-<pre class="term-body" tabindex="0"><code><span class="t-comment"># module | source | target | platforms</span>
-<span class="t-mod">shell </span> | macos/zshrc          | ~/.zshrc                | macos
-<span class="t-mod">shell </span> | wsl/bashrc           | ~/.bashrc               | wsl
-<span class="t-mod">prompt</span> | shared/starship.toml | ~/.config/starship.toml | macos,wsl
-<span class="t-mod">git   </span> | shared/git/gitconfig | ~/.gitconfig            | macos,gitbash,wsl,windows</code></pre>
+<pre class="term-body" tabindex="0"><code><span class="t-comment"># module | <span class="col-src">source | </span>target | platforms</span>
+<span class="t-mod">shell </span> | <span class="col-src">macos/zshrc          | </span>~/.zshrc                | macos
+<span class="t-mod">shell </span> | <span class="col-src">windows/bashrc       | </span>~/.bashrc               | gitbash
+<span class="t-mod">shell </span> | <span class="col-src">wsl/bashrc           | </span>~/.bashrc               | wsl
+<span class="t-mod">prompt</span> | <span class="col-src">shared/starship.toml | </span>~/.config/starship.toml | macos,wsl<span class="row-wide">
+<span class="t-mod">git   </span> | <span class="col-src">shared/git/gitconfig | </span>~/.gitconfig            | macos,gitbash,wsl,windows</span></code></pre>
             </figure>
           </div>
 
-          <ul class="fan-targets" aria-label="Where each platform's links land">
+          <ul class="fan-targets" aria-label="The shell entry points each platform links">
             <li class="target">
-              <div class="target-head">
-                <h3>macOS</h3>
-                <span class="target-shells">zsh</span>
-              </div>
+              <h3>macOS <span class="target-shells">zsh</span></h3>
               <ul class="links">
-                <li><span class="to">~/.zshrc</span><span class="from">macos/zshrc</span></li>
-                <li><span class="to">~/.config/starship.toml</span><span class="from">shared/starship.toml</span></li>
-                <li><span class="to">~/.gitconfig, ~/.config/git/ignore</span><span class="from">shared/git/</span></li>
-                <li><span class="to">~/.claude/CLAUDE.md, settings.json</span><span class="from">shared/claude/</span></li>
+                <li>~/.zshrc</li>
               </ul>
               <p class="target-count"><strong>6</strong> links</p>
             </li>
             <li class="target">
-              <div class="target-head">
-                <h3>Windows</h3>
-                <span class="target-shells">Git Bash, PowerShell</span>
-              </div>
+              <h3>Windows <span class="target-shells">Git Bash, PowerShell</span></h3>
               <ul class="links">
-                <li><span class="to">~/.bashrc, ~/.bash_profile</span><span class="from">windows/bashrc, bash_profile</span></li>
-                <li><span class="to">$PROFILE.CurrentUserAllHosts</span><span class="from">windows/Microsoft.PowerShell_profile.ps1</span></li>
-                <li><span class="to">~/.config/starship.toml</span><span class="from">windows/starship.toml</span></li>
-                <li><span class="to">~/.gitconfig, ~/.config/git/ignore</span><span class="from">shared/git/</span></li>
-                <li><span class="to">~/.claude/CLAUDE.md, settings.json</span><span class="from">shared/claude/</span></li>
+                <li>~/.bashrc</li>
+                <li>~/.bash_profile</li>
+                <li>$PROFILE</li>
               </ul>
-              <p class="target-count"><strong>7</strong> links from Git Bash, <strong>6</strong> from PowerShell</p>
+              <p class="target-count"><strong>7</strong> from Git Bash, <strong>6</strong> from PowerShell</p>
             </li>
             <li class="target">
-              <div class="target-head">
-                <h3>WSL</h3>
-                <span class="target-shells">bash</span>
-              </div>
+              <h3>WSL <span class="target-shells">bash</span></h3>
               <ul class="links">
-                <li><span class="to">~/.bashrc</span><span class="from">wsl/bashrc</span></li>
-                <li><span class="to">~/.config/starship.toml</span><span class="from">shared/starship.toml</span></li>
-                <li><span class="to">~/.gitconfig, ~/.config/git/ignore</span><span class="from">shared/git/</span></li>
-                <li><span class="to">~/.claude/CLAUDE.md, settings.json</span><span class="from">shared/claude/</span></li>
+                <li>~/.bashrc</li>
               </ul>
               <p class="target-count"><strong>6</strong> links</p>
             </li>
           </ul>
-        </div>
-      </div>
-    </section>
 
-    <section class="section" id="shells" aria-labelledby="shells-title">
-      <div class="shell">
-        <div class="section-head">
-          <span class="section-kicker">shared/shell/</span>
-          <h2 id="shells-title" class="section-title">Four shells, one shared layer</h2>
-          <p class="section-lede">zsh and both bashes source the same <code>sh</code> files. PowerShell gets its own profile.</p>
+          <div class="fan-shared reveal">
+            <p>Plus five on every platform</p>
+            <ul class="links">
+              <li>~/.config/starship.toml</li>
+              <li>~/.gitconfig</li>
+              <li>~/.config/git/ignore</li>
+              <li>~/.claude/CLAUDE.md</li>
+              <li>~/.claude/settings.json</li>
+            </ul>
+          </div>
         </div>
-
-        <ul class="shells">
-          <li class="shell-card" data-tone="mac">
-            <h3>zsh</h3>
-            <p class="shell-platform">macOS</p>
-            <p class="shell-entry"><code>macos/zshrc</code></p>
-            <p class="shell-layer">sources shared/shell/</p>
-          </li>
-          <li class="shell-card" data-tone="wsl">
-            <h3>bash</h3>
-            <p class="shell-platform">WSL</p>
-            <p class="shell-entry"><code>wsl/bashrc</code></p>
-            <p class="shell-layer">sources shared/shell/</p>
-          </li>
-          <li class="shell-card" data-tone="gitbash">
-            <h3>bash</h3>
-            <p class="shell-platform">Git Bash on Windows</p>
-            <p class="shell-entry"><code>windows/bashrc</code> and <code>windows/bash_profile</code></p>
-            <p class="shell-layer">sources shared/shell/</p>
-          </li>
-          <li class="shell-card" data-tone="pwsh">
-            <h3>pwsh</h3>
-            <p class="shell-platform">PowerShell on Windows</p>
-            <p class="shell-entry"><code>windows/Microsoft.PowerShell_profile.ps1</code></p>
-            <p class="shell-layer">own profile, same prompt</p>
-          </li>
-        </ul>
       </div>
     </section>
 
     <section class="section" id="safety" aria-labelledby="safety-title">
       <div class="shell">
-        <div class="section-head">
+        <div class="section-head reveal">
           <span class="section-kicker">--apply</span>
           <h2 id="safety-title" class="section-title">Safe to run on a machine you care about</h2>
-          <p class="section-lede">The installers change nothing until you ask, and they never delete a file.</p>
         </div>
         <ol class="rules">
-          <li>
+          <li class="reveal">
             <h3>Dry run by default</h3>
-            <p>Every run prints the plan first. Only <code>--apply</code>, or <code>-Apply</code> in PowerShell, writes anything.</p>
+            <p>Nothing is written without <code>--apply</code>, or <code>-Apply</code> in PowerShell.</p>
           </li>
-          <li>
+          <li class="reveal">
             <h3>Nothing is deleted</h3>
-            <p>An existing file is renamed to <code>&lt;target&gt;.bak.&lt;timestamp&gt;</code> before a link replaces it.</p>
+            <p>An existing file moves to <code>&lt;target&gt;.bak.&lt;timestamp&gt;</code> first.</p>
           </li>
-          <li>
+          <li class="reveal">
             <h3>Private stays local</h3>
-            <p>No Git identity or employer config in the repository. Every rc file sources an untracked <code>*.local</code> sibling last, so local values win.</p>
+            <p>No identity is tracked. Every rc file sources an untracked <code>*.local</code> file last.</p>
           </li>
-          <li>
+          <li class="reveal">
             <h3>Clean uninstall</h3>
-            <p><code>--unlink</code> removes only symlinks that point into this repository, and <code>--restore</code> puts the backups back.</p>
+            <p><code>--unlink</code> removes only its own links; <code>--restore</code> brings the backups back.</p>
           </li>
         </ol>
       </div>
@@ -359,13 +300,12 @@
 
     <section class="section" id="install" aria-labelledby="install-title">
       <div class="shell">
-        <div class="section-head">
+        <div class="section-head reveal">
           <span class="section-kicker">quick start</span>
           <h2 id="install-title" class="section-title">Install</h2>
-          <p class="section-lede">Clone it anywhere, read the dry run, then apply it.</p>
         </div>
 
-        <div class="install-grid">
+        <div class="install-grid reveal">
           <figure class="term snippet" aria-labelledby="snip-posix-title">
             <div class="term-bar">
               <h3 id="snip-posix-title">macOS, WSL, and Git Bash</h3>
@@ -397,43 +337,69 @@ cd ~/code/dotfiles-core
         <p id="copy-status" class="visually-hidden" role="status" aria-live="polite"></p>
 
         <ul class="requirements">
-          <li>Needs <code>git</code> and one supported shell. Starship is optional; without it the shell keeps its normal prompt.</li>
-          <li>Windows symlinks need Developer Mode or an elevated shell. The installers tell you when that is missing.</li>
-          <li>Install one module with <code>--only shell</code>, or skip one with <code>--skip prompt</code>.</li>
+          <li>Needs <code>git</code>. Starship is optional.</li>
+          <li>Windows symlinks need Developer Mode or an elevated shell.</li>
         </ul>
       </div>
     </section>
 
     <section class="section" id="faq" aria-labelledby="faq-title">
       <div class="shell">
-        <div class="section-head">
-          <h2 id="faq-title" class="section-title">Questions answered</h2>
+        <div class="section-head reveal">
+          <h2 id="faq-title" class="section-title">FAQ</h2>
         </div>
-        <div class="faq">
+        <div class="faq reveal">
           <details open>
             <summary>Why symlinks instead of copies?</summary>
-            <p>The repository stays the only copy. An edit to <code>~/.zshrc</code> is an edit to the repository, so <code>git diff</code> shows it and a <code>git pull</code> reaches every machine.</p>
+            <p>The repository stays the only copy: an edit to <code>~/.zshrc</code> shows in <code>git diff</code>, and <code>git pull</code> reaches every machine.</p>
           </details>
           <details>
             <summary>Where do my own aliases go?</summary>
-            <p>In <code>~/.shell.local</code>, which zsh and both bashes read, or <code>profile.local.ps1</code> next to the PowerShell profile. They load after the tracked configuration, so local values win.</p>
-          </details>
-          <details>
-            <summary>What is not included?</summary>
-            <p>Git identity, employer and client configuration, package lists, macOS system settings, and editor and terminal settings. Your identity goes in <code>~/.gitconfig.local</code>, which the tracked gitconfig includes.</p>
+            <p>In <code>~/.shell.local</code>, or <code>profile.local.ps1</code> next to the PowerShell profile. Both load last, so they win.</p>
           </details>
           <details>
             <summary>How do I update it?</summary>
-            <p>Run <code>git pull</code>, then <code>./scripts/install.sh --apply</code>, or <code>.\scripts\install.ps1 -Apply</code> in PowerShell. Links already in place are left alone; new ones get added.</p>
-          </details>
-          <details>
-            <summary>How do I see what is linked?</summary>
-            <p>Run <code>./scripts/install.sh --status</code>, or <code>-Status</code> in PowerShell. <code>doctor.sh</code> and <code>doctor.ps1</code> catch the problems that fail silently, such as missing symlink rights on Windows.</p>
+            <p><code>git pull</code>, then run the installer with <code>--apply</code> again. Links already in place are left alone.</p>
           </details>
           <details>
             <summary>What does the Claude Code part do?</summary>
-            <p>It links <code>CLAUDE.md</code> and <code>settings.json</code>. The settings turn off telemetry and auto-update, keep commands behind approval, and deny secret files, <code>rm -rf</code>, force-push, and pushes to <code>main</code>. A safety floor, not a sandbox.</p>
+            <p>It links <code>CLAUDE.md</code> and <code>settings.json</code>: telemetry and auto-update off, commands behind approval, and secret files, <code>rm -rf</code>, force-push, and pushes to <code>main</code> denied. A safety floor, not a sandbox.</p>
           </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="get-started" aria-labelledby="closing-title">
+      <div class="shell">
+        <div class="closing-frame reveal">
+          <div class="closing">
+            <div>
+              <h2 id="closing-title" class="closing-title">Your shell, the same on <em>every machine</em></h2>
+              <p class="closing-lede">MIT licensed. Clone it, read the dry run, apply it. A <code>git pull</code> keeps every machine in step.</p>
+              <div class="cta">
+                <a class="btn btn-primary btn-go" href="https://github.com/marcop135/dotfiles-core">Get it on GitHub <span class="btn-arrow" aria-hidden="true">&rarr;</span></a>
+              </div>
+            </div>
+
+            <figure class="term" aria-labelledby="closing-term-caption" data-play>
+              <figcaption id="closing-term-caption" class="term-bar">
+                <span class="term-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+                zsh on macOS: after --apply
+              </figcaption>
+<pre class="term-body" tabindex="0"><code><span class="t-path">~/code/dotfiles-core</span> <span class="t-muted">on</span> <span class="t-branch">main</span>
+<span class="t-prompt">&#10095;</span> <span class="t-cmd">./scripts/install.sh --status</span>
+<span class="t-out i0"><span class="t-muted">platform:</span> macos</span>
+<span class="t-out i1"> </span>
+<span class="t-out i2">  <span class="t-mod">shell </span>   <span class="t-ok">linked</span>     ~/.zshrc</span>
+<span class="t-out i3">  <span class="t-mod">prompt</span>   <span class="t-ok">linked</span>     ~/.config/starship.toml</span>
+<span class="t-out i4">  <span class="t-mod">git   </span>   <span class="t-ok">linked</span>     ~/.gitconfig</span>
+<span class="t-out i5">  <span class="t-mod">git   </span>   <span class="t-ok">linked</span>     ~/.config/git/ignore</span>
+<span class="t-out i6">  <span class="t-mod">claude</span>   <span class="t-ok">linked</span>     ~/.claude/CLAUDE.md</span>
+<span class="t-out i7">  <span class="t-mod">claude</span>   <span class="t-ok">linked</span>     ~/.claude/settings.json</span>
+<span class="t-out i8"> </span>
+<span class="t-out i9"><span class="t-prompt">&#10095;</span> <span class="t-cursor" aria-hidden="true"></span></span></code></pre>
+            </figure>
+          </div>
         </div>
       </div>
     </section>
@@ -453,6 +419,6 @@ cd ~/code/dotfiles-core
     </div>
   </footer>
   <noscript><img class="pixel" src="https://mt.marcopontili.com/m/?idsite=8&amp;rec=1" alt="" width="1" height="1" referrerpolicy="no-referrer-when-downgrade"></noscript>
-  <script src="/app.f8aaf6bc.js" defer></script>
+  <script src="/app.0a6a49e2.js" defer></script>
 </body>
 </html>
