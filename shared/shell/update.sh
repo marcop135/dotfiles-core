@@ -53,7 +53,27 @@ run_step_summary() {
 
 update_npm() {
   command -v npm >/dev/null 2>&1 || { echo "npm not installed, skipping."; return 0; }
+  case "$(uname -s 2>/dev/null)" in
+    MINGW* | MSYS* | CYGWIN*) _npm_clear_staging ;;
+  esac
   npm update -g
+}
+
+# An interrupted global install on Windows leaves hidden staging directories
+# under the global root, and every later `npm update -g` fails on them with
+# EINVALIDPACKAGENAME. They are npm's own scratch space, so removing them is
+# safe; a package directory never starts with a dot.
+_npm_clear_staging() {
+  _npm_root=$(npm root -g 2>/dev/null) || { unset _npm_root; return 0; }
+  # npm prints a Windows path, which the globs below cannot expand.
+  _npm_root=$(cygpath -u "$_npm_root" 2>/dev/null || printf '%s' "$_npm_root")
+  for _npm_dir in "$_npm_root"/.[!.]* "$_npm_root"/@*/.[!.]*; do
+    [ -d "$_npm_dir" ] || continue
+    case "${_npm_dir##*/}" in .bin) continue ;; esac
+    echo "removing stale npm staging directory: $_npm_dir"
+    rm -rf -- "$_npm_dir"
+  done
+  unset _npm_root _npm_dir
 }
 
 update_pipx() {

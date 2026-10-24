@@ -7,7 +7,7 @@ Repository: https://github.com/marcop135/dotfiles-core
 
 ## Primary
 
-- [Home](https://dotfiles.marcopontili.com/): Product page with the manifest, the four shells, and the quick start
+- [Home](https://dotfiles.marcopontili.com/): Product page with the manifest, the safety rules, and the quick start
 - [Markdown home](https://dotfiles.marcopontili.com/index.md): Same content as plain Markdown
 - [Privacy](https://dotfiles.marcopontili.com/privacy.html): Privacy policy for this website
 - [GitHub repository](https://github.com/marcop135/dotfiles-core): Source, installers, CI

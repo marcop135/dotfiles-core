@@ -130,7 +130,10 @@ section 'nvm and Node LTS'
 if [[ -d ${NVM_DIR:-$HOME/.nvm} ]]; then
   echo '  nvm already installed, skipping.'
 elif $APPLY; then
-  curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+  # PROFILE=/dev/null stops the installer appending to ~/.zshrc, which is a
+  # symlink into this repository once install.sh has run. macos/zshrc already
+  # loads nvm from $NVM_DIR.
+  curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | PROFILE=/dev/null bash
   export NVM_DIR="$HOME/.nvm"
   # shellcheck source=/dev/null
   . "$NVM_DIR/nvm.sh"

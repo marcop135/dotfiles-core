@@ -5,6 +5,28 @@
 - **Length:** Keep each bullet on one line, max 120 characters (link URLs do not count toward the cap, only the visible text does).
 - **Links:** Add inline markdown links for related PRs, docs, and external references when they help the reader.
 
+## [1.6.0] - 2026-10-24
+
+### Added
+
+- Clear stale npm staging directories before `update_npm` on Git Bash, which otherwise fail with `EINVALIDPACKAGENAME`.
+- Add site animations and a closing call to action.
+
+### Changed
+
+- Cut the site copy: drop the shells section, the section ledes, and two FAQ entries, and shorten the rest.
+- Rebuild the site manifest diagram for phones: a left spine, the shared links listed once, and an excerpt that fits.
+
+### Fixed
+
+- Fix the bootstrap nvm installers appending to the linked `~/.zshrc` or `~/.bashrc` inside the repository.
+- Fix the PowerShell profile erroring on Windows PowerShell 5.1, whose PSReadLine lacks the prediction options.
+- Fix `Update-Everything` marking a step failed on the previous step's exit code.
+- Fix the zsh completion cache never being used, because `(#q)` needs `EXTENDED_GLOB`.
+- Fix `ff` hanging on macOS without ripgrep, where grep reads stdin when given no path.
+- Fix `doctor.sh` aborting when `SHELL` is unset.
+- Fix the WSL `open` breaking on a URL with a single quote, and running with no argument.
+
 ## [1.5.2] - 2026-10-23
 
 ### Changed

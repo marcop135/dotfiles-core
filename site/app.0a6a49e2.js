@@ -1,5 +1,5 @@
 /* dotfiles.marcopontili.com: cookieless analytics, the copy buttons, the FAQ
-   accordion, and motion that waits for its figure to be fully on screen. */
+   accordion, and motion that waits for its figure to be on screen. */
 
 /* Self-hosted Matomo at mt.marcopontili.com: no cookies, Do Not Track honoured. */
 var _paq = (window._paq = window._paq || []);
@@ -119,6 +119,24 @@ _paq.push(['enableLinkTracking']);
   window.addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('resize', schedule);
   check();
+})();
+
+/* Run each [data-run] loop only while it is on screen, so it starts with the
+   first card when the reader arrives and stops burning frames once they leave. */
+(function () {
+  var loops = document.querySelectorAll('[data-run]');
+  Array.prototype.forEach.call(loops, function (el) {
+    if (!('IntersectionObserver' in window)) {
+      el.classList.add('on-screen');
+      return;
+    }
+    new IntersectionObserver(
+      function (entries) {
+        el.classList.toggle('on-screen', entries[0].isIntersecting);
+      },
+      { threshold: 0.3 }
+    ).observe(el);
+  });
 })();
 
 /* FAQ: animate the height of each answer as it opens and closes. */

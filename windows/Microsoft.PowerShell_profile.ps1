@@ -52,8 +52,12 @@ if (Get-Module -ListAvailable -Name PSReadLine) {
     Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
 
     # Inline suggestion from history as you type, accepted with Right arrow.
-    Set-PSReadLineOption -PredictionSource History
-    Set-PSReadLineOption -PredictionViewStyle InlineView
+    # Windows PowerShell 5.1 ships PSReadLine 2.0.0, which has neither
+    # parameter: PredictionSource arrived in 2.1.0, PredictionViewStyle in
+    # 2.2.0. Calling them there is a profile error on every start.
+    $psrlVersion = (Get-Module PSReadLine).Version
+    if ($psrlVersion -ge [version]'2.1.0') { Set-PSReadLineOption -PredictionSource History }
+    if ($psrlVersion -ge [version]'2.2.0') { Set-PSReadLineOption -PredictionViewStyle InlineView }
 
     # Show possible completions as a list on the first Tab rather than cycling
     # through them one at a time.
@@ -151,6 +155,9 @@ function Update-Everything {
         $i++
         Write-Host ''
         Write-Host "========== [$i] $name =========="
+        # Reset first: a step that runs no native command leaves the previous
+        # step's exit code in place, and would inherit its failure.
+        $global:LASTEXITCODE = 0
         try {
             & $steps[$name]
             $ok = ($LASTEXITCODE -eq 0 -or $null -eq $LASTEXITCODE)

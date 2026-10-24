@@ -109,6 +109,9 @@ ff() {
   [ -n "${1-}" ] || { echo "usage: ff <pattern> [path]" >&2; return 2; }
   if command -v rg >/dev/null 2>&1; then
     rg --hidden --glob '!.git' "$@"
+  # BSD grep on macOS reads stdin when -r has no path, so give it one.
+  elif [ $# -eq 1 ]; then
+    grep -rIn --exclude-dir=.git --exclude-dir=node_modules "$1" .
   else
     grep -rIn --exclude-dir=.git --exclude-dir=node_modules "$@"
   fi

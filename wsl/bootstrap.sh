@@ -96,7 +96,9 @@ if [[ -d "${NVM_DIR:-$HOME/.nvm}" ]]; then
 elif $APPLY; then
   # Pinning the installer version rather than following master: a `curl | bash`
   # against a moving target is worth avoiding where the cost is one string.
-  curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+  # PROFILE=/dev/null stops it appending to ~/.bashrc, which is a symlink into
+  # this repository once install.sh has run. wsl/bashrc already loads nvm.
+  curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | PROFILE=/dev/null bash
   export NVM_DIR="$HOME/.nvm"
   # shellcheck source=/dev/null
   . "$NVM_DIR/nvm.sh"
