@@ -80,7 +80,7 @@ fi
 # Anything over half a second is felt on every new tab, and the usual cause is
 # an eagerly loaded version manager.
 if start=$(date +%s%N 2>/dev/null) && [[ $start != *N* ]]; then
-  "$SHELL" -i -c exit >/dev/null 2>&1
+  "${SHELL:-bash}" -i -c exit >/dev/null 2>&1
   ms=$((($(date +%s%N) - start) / 1000000))
   if [[ $ms -gt 500 ]]; then
     warn "interactive shell start: ${ms}ms"

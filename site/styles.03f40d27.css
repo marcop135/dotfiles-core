@@ -602,7 +602,7 @@ figure {
 
 @keyframes type {
   to {
-    width: 20ch;
+    width: var(--cmd-w, 20ch);
   }
 }
 
@@ -615,6 +615,50 @@ figure {
 @keyframes blink {
   50% {
     opacity: 0;
+  }
+}
+
+/* ---------- Entrance ---------- */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+
+/* The hero copy rises in on load, one line after another. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-grid > div > * {
+    animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .hero-grid > div > :nth-child(2) {
+    animation-delay: 0.08s;
+  }
+
+  .hero-grid > div > :nth-child(3) {
+    animation-delay: 0.16s;
+  }
+
+  .hero-grid > div > :nth-child(4) {
+    animation-delay: 0.24s;
+  }
+
+  .hero-grid > div > :nth-child(5) {
+    animation-delay: 0.32s;
+  }
+}
+
+/* Everything else rises as it scrolls into view. Browsers without
+   scroll-driven animations, and reduced-motion users, get it static. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
+    }
   }
 }
 
@@ -655,9 +699,13 @@ figure {
 
 /* ---------- Manifest fan-out ---------- */
 
+/* One wire drops from the manifest to each platform card. Wide: a bus spans
+   the three columns. Narrow: a spine runs down the left edge of the stack.
+   A dot travels each wire in turn and lights the card it reaches. */
 .fan {
   --wire: var(--line-strong);
   --wire-w: 2px;
+  --drop: var(--space-5);
 }
 
 .manifest {
@@ -670,41 +718,43 @@ figure {
   font-size: clamp(0.6875rem, 1.5vw, 0.8125rem);
 }
 
-.fan-targets {
-  position: relative;
-  display: grid;
-  gap: var(--space-5);
-  margin: 0;
-  padding: var(--space-7) 0 0;
-  list-style: none;
-}
-
-/* Drop from the manifest down to the bus */
 .manifest::after {
   content: "";
   position: absolute;
   top: 100%;
-  left: 50%;
   width: var(--wire-w);
-  height: var(--space-5);
   background: var(--wire);
-  transform: translateX(-50%);
 }
 
-.fan-targets::after {
-  content: "";
-  position: absolute;
-  top: var(--space-5);
-  height: var(--wire-w);
-  background: var(--wire);
+.fan-targets {
+  position: relative;
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .target {
+  --tone: var(--accent);
+  --slot: 0s;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4) var(--space-5);
   border: 1px solid var(--line);
   border-radius: var(--radius-l);
   background: var(--panel);
-  padding: var(--space-5);
+}
+
+.target:nth-child(2) {
+  --tone: var(--accent-2);
+  --slot: 1.2s;
+}
+
+.target:nth-child(3) {
+  --tone: var(--ok);
+  --slot: 2.4s;
 }
 
 .target::before {
@@ -712,18 +762,12 @@ figure {
   position: absolute;
 }
 
-.target-head {
+.target h3 {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: var(--space-3);
-  flex-wrap: wrap;
-  padding-bottom: var(--space-3);
-  margin-bottom: var(--space-3);
-  border-bottom: 1px dashed var(--line);
-}
-
-.target h3 {
+  gap: var(--space-1) var(--space-3);
   font-size: 1.125rem;
 }
 
@@ -731,110 +775,209 @@ figure {
   color: var(--muted);
   font-family: var(--font-mono);
   font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0;
 }
 
 .links {
-  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
   padding: 0;
   list-style: none;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
-  line-height: 1.5;
 }
 
 .links li {
-  display: grid;
-  gap: 0.125rem;
-  padding-block: var(--space-2);
-}
-
-.links li + li {
-  border-top: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
-}
-
-.links .to {
-  color: var(--text);
+  padding: 0.125rem var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  background: var(--bg-raised);
   overflow-wrap: anywhere;
-}
-
-.links .from {
-  color: var(--muted);
-  overflow-wrap: anywhere;
-}
-
-.links .from::before {
-  content: "\2190\00a0\00a0";
-  color: var(--accent);
 }
 
 .target-count {
-  margin-top: var(--space-3);
+  margin-top: auto;
+  padding-top: var(--space-3);
   color: var(--muted);
   font-family: var(--font-mono);
   font-size: 0.8125rem;
 }
 
 .target-count strong {
-  color: var(--accent);
+  color: var(--tone);
 }
 
-/* Narrow: one drop from the manifest into the stacked cards, no bus */
+.fan-shared {
+  max-width: 44rem;
+  margin: var(--space-6) auto 0;
+  text-align: center;
+}
+
+.fan-shared p {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+.fan-shared .links {
+  justify-content: center;
+}
+
+/* Phone: the excerpt drops its source column and its widest row so it fits
+   without scrolling, and the heading lines up with the stack below it. */
+@media (max-width: 42.99rem) {
+  .row-wide {
+    display: none;
+  }
+}
+
+@media (max-width: 39.99rem) {
+  .col-src {
+    display: none;
+  }
+
+  .manifest .term-body {
+    padding-inline: var(--space-3);
+    font-size: min(0.6875rem, 3vw);
+  }
+
+  #manifest .section-head--center {
+    margin-inline: 0;
+    text-align: left;
+  }
+}
+
+/* Narrow: a spine on the left, a tick into each card at its heading */
 @media (max-width: 59.99rem) {
-  .fan-targets {
-    padding-top: var(--space-5);
+  .fan {
+    --spine: 0.75rem;
+    --tick: 1.25rem;
+    --hit: 1.75rem;
   }
 
-  .fan-targets::after {
-    content: none;
+  .manifest {
+    max-width: none;
+  }
+
+  .manifest::after {
+    left: var(--spine);
+    height: calc(var(--drop) + var(--hit) + var(--wire-w));
+  }
+
+  .fan-targets {
+    margin-top: var(--drop);
+    padding-left: calc(var(--spine) + var(--tick));
+  }
+
+  .target::before {
+    top: var(--hit);
+    left: calc(-1 * var(--tick) - 1px);
+    width: var(--tick);
+    bottom: calc(-1 * (var(--space-4) + var(--hit)));
+    border-top: var(--wire-w) solid var(--wire);
+    border-left: var(--wire-w) solid var(--wire);
+  }
+
+  .target:last-child::before {
+    bottom: auto;
+    height: 0;
+    border-left: 0;
+  }
+
+  .fan-shared {
+    text-align: left;
+  }
+
+  .fan-shared .links {
+    justify-content: flex-start;
   }
 }
 
-/* Wide: the bus spans the three column centres, a drop into each card */
+/* Wide: a bus spans the three column centres, a drop into each card */
 @media (min-width: 60rem) {
+  .manifest::after {
+    left: 50%;
+    height: var(--drop);
+    transform: translateX(-50%);
+  }
+
   .fan-targets {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-5);
+    margin-top: var(--space-7);
   }
 
-  .fan-targets::after {
+  .fan-targets::before {
+    content: "";
+    position: absolute;
+    top: calc(-1 * (var(--space-7) - var(--drop)));
     left: calc((100% - 2 * var(--space-5)) / 6);
     right: calc((100% - 2 * var(--space-5)) / 6);
+    height: var(--wire-w);
+    background: var(--wire);
   }
 
   .target::before {
     bottom: 100%;
     left: 50%;
     width: var(--wire-w);
-    height: calc(var(--space-7) - var(--space-5));
+    height: calc(var(--space-7) - var(--drop));
     margin-bottom: 1px;
     background: var(--wire);
     transform: translateX(-50%);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) and (min-width: 60rem) {
+@media (prefers-reduced-motion: no-preference) {
+  .target {
+    animation: hit 3.6s ease-out var(--slot) infinite;
+  }
+
+  .target .links li {
+    animation: chip 3.6s ease-out calc(var(--slot) + 0.1s) infinite;
+  }
+
   .target::after {
     content: "";
     position: absolute;
-    left: calc(50% - 0.25rem);
-    top: calc(-1 * (var(--space-7) - var(--space-5)) - 0.25rem);
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
-    background: var(--accent);
+    background: var(--tone);
+    box-shadow: 0 0 0.5rem var(--tone);
     opacity: 0;
-    animation: drop 3.6s ease-in infinite;
-  }
-
-  .target:nth-child(2)::after {
-    animation-delay: 1.2s;
-  }
-
-  .target:nth-child(3)::after {
-    animation-delay: 2.4s;
   }
 }
 
-@keyframes drop {
+@media (prefers-reduced-motion: no-preference) and (max-width: 59.99rem) {
+  .target::after {
+    top: calc(var(--hit) - 0.25rem + 1px);
+    left: calc(-1 * var(--tick) - 0.25rem);
+    animation: dot-x 3.6s ease-in var(--slot) infinite;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (min-width: 60rem) {
+  .target::after {
+    left: calc(50% - 0.25rem);
+    top: calc(-1 * (var(--space-7) - var(--drop)) - 0.25rem);
+    animation: dot-y 3.6s ease-in var(--slot) infinite;
+  }
+}
+
+/* With scripting, the loop runs only while the fan is on screen. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .fan:not(.on-screen) .target,
+  .fan:not(.on-screen) .target::after,
+  .fan:not(.on-screen) .target .links li {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes dot-y {
   0% {
     opacity: 0;
     transform: translateY(0);
@@ -844,94 +987,68 @@ figure {
     opacity: 1;
   }
 
-  28% {
-    opacity: 0;
-    transform: translateY(calc(var(--space-7) - var(--space-5)));
+  24% {
+    opacity: 1;
+    transform: translateY(calc(var(--space-7) - var(--drop)));
   }
 
+  30%,
   100% {
     opacity: 0;
-    transform: translateY(calc(var(--space-7) - var(--space-5)));
+    transform: translateY(calc(var(--space-7) - var(--drop)));
   }
 }
 
-.fan-note {
-  max-width: 44rem;
-  margin: var(--space-6) auto 0;
-  color: var(--muted);
-  text-align: center;
-}
+@keyframes dot-x {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
 
-/* ---------- Shells ---------- */
+  8% {
+    opacity: 1;
+  }
 
-.shells {
-  display: grid;
-  gap: var(--space-4);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
+  24% {
+    opacity: 1;
+    transform: translateX(var(--tick));
+  }
 
-@media (min-width: 40rem) {
-  .shells {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  30%,
+  100% {
+    opacity: 0;
+    transform: translateX(var(--tick));
   }
 }
 
-@media (min-width: 64rem) {
-  .shells {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+@keyframes hit {
+  0%,
+  22%,
+  60%,
+  100% {
+    border-color: var(--line);
+    box-shadow: 0 0 0 0 transparent;
+  }
+
+  30% {
+    border-color: var(--tone);
+    box-shadow: 0 0 0 1px var(--tone), 0 1rem 2.5rem -1.25rem var(--tone);
   }
 }
 
-.shell-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-5);
-  border: 1px solid var(--line);
-  border-bottom: 0.1875rem solid var(--accent);
-  border-radius: var(--radius-l);
-  background: var(--panel);
-}
+@keyframes chip {
+  0%,
+  22%,
+  55%,
+  100% {
+    border-color: var(--line);
+    color: inherit;
+  }
 
-.shell-card[data-tone="wsl"] {
-  border-bottom-color: var(--accent-2);
-}
-
-.shell-card[data-tone="pwsh"] {
-  border-bottom-color: var(--muted);
-}
-
-.shell-card h3 {
-  font-size: 1.75rem;
-  color: var(--accent);
-}
-
-.shell-card[data-tone="wsl"] h3 {
-  color: var(--accent-2);
-}
-
-.shell-card[data-tone="pwsh"] h3 {
-  color: var(--text);
-}
-
-.shell-platform {
-  font-weight: 600;
-}
-
-.shell-entry {
-  color: var(--muted);
-  font-size: 0.9375rem;
-}
-
-.shell-layer {
-  margin-top: auto;
-  padding-top: var(--space-3);
-  border-top: 1px dashed var(--line);
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
+  32% {
+    border-color: var(--tone);
+    color: var(--tone);
+  }
 }
 
 /* ---------- Safety ---------- */
@@ -1144,6 +1261,141 @@ figure {
 .faq details p {
   padding: 0 var(--space-5) var(--space-5);
   color: var(--muted);
+}
+
+/* ---------- Closing ---------- */
+
+/* A dark panel in both themes, like the terminals, behind a gradient hairline:
+   the frame paints the border and the panel sits one pixel in. */
+.closing-frame {
+  padding: 1px;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, rgb(56 189 248 / 0.45), var(--term-line) 45%, var(--term-line) 70%, rgb(251 146 60 / 0.35));
+}
+
+.closing {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: var(--space-7);
+  padding: clamp(1.5rem, 5vw, 3.5rem);
+  border-radius: calc(1rem - 1px);
+  background: var(--term-bg);
+  color: var(--term-text);
+  overflow: hidden;
+}
+
+@media (min-width: 60rem) {
+  .closing {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+  }
+}
+
+/* Two soft glows, and a grid that fades out toward the edges. */
+.closing::before,
+.closing::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.closing::before {
+  background:
+    radial-gradient(28rem circle at 0% 0%, rgb(56 189 248 / 0.08), transparent 60%),
+    radial-gradient(28rem circle at 100% 100%, rgb(251 146 60 / 0.05), transparent 60%);
+}
+
+.closing::after {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.03) 1px, transparent 1px);
+  background-size: 2.5rem 2.5rem;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000, transparent 75%);
+  mask-image: radial-gradient(ellipse at center, #000, transparent 75%);
+}
+
+.closing-title {
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  text-wrap: balance;
+}
+
+.closing-title em {
+  font-style: normal;
+  color: var(--term-accent);
+}
+
+.closing-lede {
+  max-width: 34rem;
+  margin-top: var(--space-4);
+  color: var(--term-muted);
+  font-size: 1.125rem;
+}
+
+.closing :not(pre) > code {
+  border-color: var(--term-line);
+  background: var(--term-bar);
+}
+
+/* The light theme's accent is a dark blue; the panel needs the bright one. */
+.closing .btn-primary {
+  min-height: 3.25rem;
+  padding-inline: var(--space-6);
+  background: var(--term-accent);
+  color: #04121c;
+  font-size: 1rem;
+}
+
+.closing .btn-primary:hover {
+  background: color-mix(in srgb, var(--term-accent) 80%, #fff);
+}
+
+.closing .btn-primary:focus-visible {
+  outline-color: var(--term-accent);
+}
+
+.closing .term {
+  background: rgb(0 0 0 / 0.35);
+}
+
+.closing .t-cmd {
+  --cmd-w: 29ch;
+}
+
+/* Phone: tighter insets so the status lines fit without scrolling. */
+@media (max-width: 39.99rem) {
+  .closing {
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .closing .term-body {
+    padding-inline: var(--space-3);
+    font-size: min(0.75rem, 2.6vw);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn-go {
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  .btn-go:hover {
+    transform: translateY(-0.125rem);
+  }
+
+  .btn-arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .btn-go:hover .btn-arrow {
+    transform: translateX(0.25rem);
+  }
+
+  .closing .t-cmd {
+    animation-timing-function: steps(29, end);
+  }
 }
 
 /* ---------- Prose (privacy) ---------- */
