@@ -80,15 +80,18 @@ export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 
 _load_nvm() {
   unset -f nvm node npm npx 2>/dev/null
-  [[ -s $NVM_DIR/nvm.sh ]] && source "$NVM_DIR/nvm.sh"
+  source "$NVM_DIR/nvm.sh" --no-use || return
   [[ -s $NVM_DIR/bash_completion ]] && source "$NVM_DIR/bash_completion"
+  autoload -Uz add-zsh-hook
+  add-zsh-hook chpwd _dotfiles_nvmrc_sync
+  _dotfiles_nvmrc_sync
 }
 
 if [[ -s $NVM_DIR/nvm.sh ]]; then
-  nvm() { _load_nvm; nvm "$@"; }
-  node() { _load_nvm; node "$@"; }
-  npm() { _load_nvm; npm "$@"; }
-  npx() { _load_nvm; npx "$@"; }
+  nvm() { _load_nvm && nvm "$@"; }
+  node() { _load_nvm && node "$@"; }
+  npm() { _load_nvm && npm "$@"; }
+  npx() { _load_nvm && npx "$@"; }
 fi
 
 # ---------- Prompt ----------
