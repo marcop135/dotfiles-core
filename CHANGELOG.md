@@ -9,7 +9,7 @@
 
 ### Added
 
-- Select installed Node versions from the nearest `.nvmrc` on macOS and WSL ([#39](https://github.com/marcop135/dotfiles-core/issues/39)).
+- Select installed Node versions from the nearest `.nvmrc` on macOS and WSL ([#40](https://github.com/marcop135/dotfiles-core/pull/40), [#39](https://github.com/marcop135/dotfiles-core/issues/39)).
 
 ## [1.6.0] - 2026-10-24
 
