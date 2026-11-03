@@ -47,16 +47,25 @@ export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 _load_nvm() {
   unset -f nvm node npm npx 2>/dev/null
   # shellcheck source=/dev/null
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+  . "$NVM_DIR/nvm.sh" --no-use || return
   # shellcheck source=/dev/null
   [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
+  # Switch before `cd project && npm ...`, without replacing a local cd function.
+  if ! declare -F cd >/dev/null; then
+    cd() { builtin cd "$@" && _dotfiles_nvmrc_sync; }
+  fi
+  case ";${PROMPT_COMMAND-};" in
+    *';_dotfiles_nvmrc_sync;'*) ;;
+    *) PROMPT_COMMAND="_dotfiles_nvmrc_sync${PROMPT_COMMAND:+; $PROMPT_COMMAND}" ;;
+  esac
+  _dotfiles_nvmrc_sync
 }
 
 if [ -s "$NVM_DIR/nvm.sh" ]; then
-  nvm() { _load_nvm; nvm "$@"; }
-  node() { _load_nvm; node "$@"; }
-  npm() { _load_nvm; npm "$@"; }
-  npx() { _load_nvm; npx "$@"; }
+  nvm() { _load_nvm && nvm "$@"; }
+  node() { _load_nvm && node "$@"; }
+  npm() { _load_nvm && npm "$@"; }
+  npx() { _load_nvm && npx "$@"; }
 fi
 
 # ---------- Prompt ----------

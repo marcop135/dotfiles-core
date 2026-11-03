@@ -5,6 +5,12 @@
 - **Length:** Keep each bullet on one line, max 120 characters (link URLs do not count toward the cap, only the visible text does).
 - **Links:** Add inline markdown links for related PRs, docs, and external references when they help the reader.
 
+## [Unreleased]
+
+### Added
+
+- Select installed Node versions from the nearest `.nvmrc` on macOS and WSL ([#40](https://github.com/marcop135/dotfiles-core/pull/40), [#39](https://github.com/marcop135/dotfiles-core/issues/39)).
+
 ## [1.6.0] - 2026-10-24
 
 ### Added
