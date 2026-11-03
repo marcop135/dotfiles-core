@@ -85,7 +85,7 @@ Files are linked, not copied. The repository remains the source of truth after i
 
 ## Shell
 
-The shared shell layer lives in `shared/shell/` and is loaded by the POSIX shells.
+The POSIX shells load `shared/shell/`. On macOS and WSL, the first use of nvm, Node, or npm loads nvm and selects the nearest parent `.nvmrc`. Subsequent directory changes select the project's installed version or restore nvm's default outside projects. Missing versions are reported, never downloaded automatically.
 
 ### Functions
 

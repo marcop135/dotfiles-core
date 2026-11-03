@@ -122,3 +122,37 @@ ff() {
 sizes() {
   du -sh -- "${1:-.}"/* 2>/dev/null | sort -h
 }
+
+# Called only after nvm loads, by the platform's directory or prompt hook.
+# Let nvm parse the nearest .nvmrc itself; `use` never installs a version.
+_dotfiles_nvmrc_sync() {
+  _dotfiles_nvmrc_dir=$PWD
+  while [ ! -f "$_dotfiles_nvmrc_dir/.nvmrc" ]; do
+    [ "$_dotfiles_nvmrc_dir" != / ] || break
+    _dotfiles_nvmrc_dir=${_dotfiles_nvmrc_dir%/*}
+    [ -n "$_dotfiles_nvmrc_dir" ] || _dotfiles_nvmrc_dir=/
+  done
+
+  _dotfiles_nvmrc_file=''
+  _dotfiles_nvmrc_contents=''
+  if [ -f "$_dotfiles_nvmrc_dir/.nvmrc" ]; then
+    _dotfiles_nvmrc_file=$_dotfiles_nvmrc_dir/.nvmrc
+    _dotfiles_nvmrc_contents=$(cat "$_dotfiles_nvmrc_file") || return 0
+  fi
+
+  # Keep manual `nvm use` choices until the project or its version file changes.
+  # Cache failed selections too, so a missing version does not spam each prompt.
+  if [ "${_dotfiles_nvmrc_last_file-unset}" = "$_dotfiles_nvmrc_file" ] &&
+     [ "${_dotfiles_nvmrc_last_contents-}" = "$_dotfiles_nvmrc_contents" ]; then
+    return 0
+  fi
+  _dotfiles_nvmrc_last_file=$_dotfiles_nvmrc_file
+  _dotfiles_nvmrc_last_contents=$_dotfiles_nvmrc_contents
+
+  if [ -n "$_dotfiles_nvmrc_file" ]; then
+    nvm use >/dev/null || :
+  else
+    nvm use default >/dev/null || :
+  fi
+  return 0
+}
