@@ -1,23 +1,16 @@
 /* dotfiles.marcopontili.com: cookieless analytics, the copy buttons, the FAQ
    accordion, and motion that waits for its figure to be on screen. */
 
-/* Self-hosted Matomo at mt.marcopontili.com: no cookies, Do Not Track honoured. */
-var _paq = (window._paq = window._paq || []);
-_paq.push(['setDoNotTrack', true]);
-_paq.push(['disableCookies']);
-_paq.push(['setRequestMethod', 'POST']);
-_paq.push(['trackPageView']);
-_paq.push(['enableLinkTracking']);
+/* Self-hosted Matomo Tag Manager container at mt.marcopontili.com: no cookies,
+   Do Not Track honoured. Tracker settings, tags and triggers live in the container. */
+var _mtm = (window._mtm = window._mtm || []);
+_mtm.push({ 'mtm.startTime': new Date().getTime(), event: 'mtm.Start' });
 (function () {
-  var u = 'https://mt.marcopontili.com/';
-  var p = 'm/';
-  _paq.push(['setTrackerUrl', u + p]);
-  _paq.push(['setSiteId', '8']);
   var d = document,
     g = d.createElement('script'),
     s = d.getElementsByTagName('script')[0];
   g.async = true;
-  g.src = u + p;
+  g.src = 'https://mt.marcopontili.com/c/UV0okpDL.js';
   s.parentNode.insertBefore(g, s);
 })();
 

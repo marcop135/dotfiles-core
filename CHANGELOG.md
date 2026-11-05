@@ -5,6 +5,13 @@
 - **Length:** Keep each bullet on one line, max 120 characters (link URLs do not count toward the cap, only the visible text does).
 - **Links:** Add inline markdown links for related PRs, docs, and external references when they help the reader.
 
+## [Unreleased]
+
+### Changed
+
+- Load analytics through a cookieless Matomo Tag Manager container that also measures time on page and script errors
+- List the anonymous interaction events in the privacy page
+
 ## [1.7.0] - 2026-11-03
 
 ### Added
