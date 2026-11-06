@@ -109,6 +109,8 @@ FORMULAE=(
   bat
   tree
   htop
+  lazygit     # Git terminal UI
+  lazydocker  # Docker terminal UI; needs a running Docker engine
   pipx        # pulls a Homebrew python3 with it
   starship    # the prompt; see shared/starship.toml
 )
