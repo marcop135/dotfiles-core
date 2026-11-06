@@ -9,8 +9,8 @@
 
 ### Added
 
-- Install lazygit and lazydocker from the macOS bootstrap ([#45](https://github.com/marcop135/dotfiles-core/issues/45)).
-- Install lazygit from the WSL bootstrap where apt ships it, Ubuntu 26.04 and later ([#45](https://github.com/marcop135/dotfiles-core/issues/45)).
+- Install lazygit and lazydocker from the macOS bootstrap ([#46](https://github.com/marcop135/dotfiles-core/pull/46), [#45](https://github.com/marcop135/dotfiles-core/issues/45)).
+- Install lazygit from the WSL bootstrap where apt ships it, Ubuntu 26.04 and later ([#46](https://github.com/marcop135/dotfiles-core/pull/46), [#45](https://github.com/marcop135/dotfiles-core/issues/45)).
 
 ## [1.8.0] - 2026-11-05
 
