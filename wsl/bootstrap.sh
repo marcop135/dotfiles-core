@@ -74,6 +74,28 @@ else
   printf '  would install: %s\n' "${PACKAGES[*]}"
 fi
 
+# ---------- lazygit ----------
+# Outside PACKAGES because apt ships it only from Ubuntu 26.04 LTS on: in the
+# single install call above it would fail the whole call on 24.04. The policy
+# output is captured before matching, because `apt-cache ... | grep -q` under
+# pipefail can report a SIGPIPE as "not packaged". An unknown package prints
+# nothing; a known but uninstallable one prints `Candidate: (none)`. A dry run
+# reads the package lists already on disk, since only --apply runs the update.
+# No Debian or Ubuntu release packages lazydocker.
+section 'lazygit'
+_policy=$(apt-cache policy lazygit 2>/dev/null || true)
+case $_policy in
+  ('' | *'Candidate: (none)'*) _lazygit=false ;;
+  (*Candidate:*) _lazygit=true ;;
+  (*) _lazygit=false ;;
+esac
+if $_lazygit; then
+  run sudo apt-get install -y lazygit
+else
+  echo '  lazygit: not packaged for this release per current package lists (Ubuntu 26.04+ ships it), skipping.'
+fi
+unset _policy _lazygit
+
 # ---------- Debian binary name workaround ----------
 # Debian and Ubuntu ship `fd` as `fdfind` and `bat` as `batcat`, because both
 # names collided with existing packages. Symlink them into ~/.local/bin, which
