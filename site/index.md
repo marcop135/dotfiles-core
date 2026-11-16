@@ -2,7 +2,7 @@
 title: "dotfiles-core: one shell setup for macOS, Windows, and WSL"
 canonical: https://dotfiles.marcopontili.com/
 description: Cross-platform dotfiles for zsh, bash, Git Bash, and PowerShell. One shared sh layer, one manifest, symlinks into your home folder.
-dateModified: 2026-10-24
+dateModified: 2026-11-16
 ---
 
 # dotfiles-core

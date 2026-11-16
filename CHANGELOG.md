@@ -7,6 +7,12 @@
 
 ## [Unreleased]
 
+### Added
+
+- Add a Markdown twin of the privacy page, linked from the page ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Add the llms.txt, sitemap, security.txt, and API catalog `Link` header to every HTML page ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Add a `Link` header from each Markdown twin back to its HTML page ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+
 ### Changed
 
 - Docs copy: State the portability rule in CONTRIBUTING.md as a plain statement ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
@@ -17,6 +23,15 @@
 - Other copy: Lengthen the 500 page title to 34 characters ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
 - Other copy: Name the four shells in the JSON-LD and manifest site descriptions ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
 - Other copy: Retitle the llms.txt facts section as a neutral "Facts" heading ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+- Put `Content-Signal` inside the `User-agent: *` group of robots.txt and drop the repeated bot groups ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Set the sitemap `lastmod` and home page `dateModified` to the last git change ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Link the FAQ node from the home page JSON-LD graph ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Serve the Open Graph card as a 48 KB JPEG instead of a 202 KB PNG ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Send `No-Vary-Search` so UTM parameters share one cache entry ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+
+### Removed
+
+- Remove the Twitter tags that repeat Open Graph ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
 
 ## [1.9.0] - 2026-11-06
 
