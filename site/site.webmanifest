@@ -1,7 +1,7 @@
 {
   "name": "dotfiles-core",
   "short_name": "dotfiles",
-  "description": "Cross-platform dotfiles for macOS, Windows, and WSL.",
+  "description": "Cross-platform dotfiles for zsh, bash, Git Bash, and PowerShell on macOS, Windows, and WSL.",
   "id": "/",
   "start_url": "/",
   "scope": "/",

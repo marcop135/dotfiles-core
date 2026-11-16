@@ -5,6 +5,19 @@
 - **Length:** Keep each bullet on one line, max 120 characters (link URLs do not count toward the cap, only the visible text does).
 - **Links:** Add inline markdown links for related PRs, docs, and external references when they help the reader.
 
+## [Unreleased]
+
+### Changed
+
+- Docs copy: State the portability rule in CONTRIBUTING.md as a plain statement ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+- Docs copy: Say in CONTRIBUTING.md that a green local run covers only that platform ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+- Docs copy: Write the scope line in AGENTS.md as one sentence ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+- Docs copy: Drop the aside about comments from the unpinned installers note in SECURITY.md ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+- Other copy: Match the home page Open Graph image alt text to the privacy page ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+- Other copy: Lengthen the 500 page title to 34 characters ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+- Other copy: Name the four shells in the JSON-LD and manifest site descriptions ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+- Other copy: Retitle the llms.txt facts section as a neutral "Facts" heading ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+
 ## [1.9.0] - 2026-11-06
 
 ### Added

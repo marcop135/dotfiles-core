@@ -1,7 +1,8 @@
 # AGENTS.md
 
 Shell, prompt, and git configuration for macOS (zsh), Windows Git Bash, WSL
-(bash), and Windows PowerShell. Two machines, three platforms, four rc files.
+(bash), and Windows PowerShell. It covers two machines, three platforms, and
+four rc files.
 `README.md` is the document for people; this is the working contract.
 
 ## The gate

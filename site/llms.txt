@@ -20,7 +20,7 @@ Repository: https://github.com/marcop135/dotfiles-core
 - [SECURITY.md](https://github.com/marcop135/dotfiles-core/blob/main/SECURITY.md): What the scripts do to a machine
 - [CHANGELOG.md](https://github.com/marcop135/dotfiles-core/blob/main/CHANGELOG.md): Release notes
 
-## Facts agents should not invent
+## Facts
 
 - Platforms: macOS (zsh), Windows (Git Bash and PowerShell), WSL (bash). 3 platforms, 4 shells, 11 symlinks.
 - `scripts/modules.conf` is the only manifest; `scripts/install.sh`, `scripts/install.ps1`, and `scripts/check.sh` all read it.
