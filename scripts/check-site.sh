@@ -142,7 +142,7 @@ for icon in $(grep -oE '"src": *"[^"]+"' site.webmanifest | sed -E 's/.*"([^"]+)
   [ -f "$(resolve "$icon")" ] || fail "site.webmanifest: icon does not resolve: $icon"
 done
 
-for f in llms.txt sitemap.xml robots.txt index.md .well-known/api-catalog .well-known/security.txt; do
+for f in llms.txt sitemap.xml robots.txt index.md privacy.md .well-known/api-catalog .well-known/security.txt; do
   [ -f "$f" ] || { fail "$f: missing"; continue; }
   for url in $(grep -oE "$CANON/[^\"<>) ]*" "$f" | sort -u); do
     [ -f "$(resolve "${url#"$CANON"}")" ] || fail "$f: canonical URL does not resolve: $url"
