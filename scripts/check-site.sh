@@ -12,6 +12,10 @@
 #      icon, and every canonical URL in llms.txt and sitemap.xml resolves to a
 #      file in site/
 #   5. no em-dash anywhere in site/
+#   6. every <title> is 30-65 characters, every meta description 70-160, and
+#      no two pages share a description
+#   7. every JSON-LD block parses as JSON, and every {"@id": ...} reference
+#      names a node in the same page
 #
 # Same rules as check.sh: bash 3.2, POSIX awk, nothing to install. It is a
 # structural check, not the W3C validator.
@@ -153,7 +157,115 @@ done
 dash=$(grep -rl "$(printf '\342\200\224')" . 2>/dev/null)
 [ -z "$dash" ] || for f in $dash; do fail "${f#./}: contains an em-dash"; done
 
+# ---------- 6. title and description ----------
+# Characters, not bytes: UTF-8 continuation bytes are dropped before counting.
+chars() {
+  printf '%s' "$1" |
+    sed -e 's/&amp;/\&/g' -e 's/&quot;/"/g' -e "s/&#39;/'/g" -e 's/&lt;/</g' -e 's/&gt;/>/g' |
+    LC_ALL=C tr -d '\200-\277' | wc -c | tr -d ' '
+}
+descs=''
+for page in $pages; do
+  flat=$(tr '\n' ' ' <"$page")
+  title=$(printf '%s' "$flat" | sed -n 's/.*<title>\([^<]*\)<\/title>.*/\1/p')
+  n=$(chars "$title")
+  { [ "$n" -ge 30 ] && [ "$n" -le 65 ]; } || fail "$page: title is $n characters, not 30-65"
+  desc=$(printf '%s' "$flat" | sed -n 's/.*<meta name="description" content="\([^"]*\)">.*/\1/p')
+  if [ -z "$desc" ]; then
+    fail "$page: no meta description"
+    continue
+  fi
+  n=$(chars "$desc")
+  { [ "$n" -ge 70 ] && [ "$n" -le 160 ]; } || fail "$page: description is $n characters, not 70-160"
+  descs="$descs$desc
+"
+done
+printf '%s' "$descs" | sort | uniq -d | while IFS= read -r d; do
+  echo "FAIL: site/: description used on more than one page: $d"
+done | grep . && status=1
+
+# ---------- 7. JSON-LD ----------
+# Every ld+json block parses as JSON, and every {"@id": ...} reference names a
+# node (an object with @id and other keys) in the same page.
+for page in $pages; do
+  grep -q 'type="application/ld+json"' "$page" || continue
+  ld=$(awk '
+    /<script type="application\/ld\+json">/ { on = 1; n++; sub(/.*<script type="application\/ld\+json">/, "") }
+    on && /<\/script>/ { sub(/<\/script>.*/, ""); print; print "\001"; on = 0; next }
+    on { print }
+  ' "$page" | awk '
+    function bad(m) { if (!err) err = m " at character " pos; return "" }
+    function ws() { while (pos <= n && index(" \t\r\n", substr(s, pos, 1))) pos++ }
+    function str(   c, e, out) {
+      if (substr(s, pos, 1) != "\"") return bad("expected a string")
+      pos++; out = ""
+      while (pos <= n) {
+        c = substr(s, pos, 1)
+        if (c == "\\") {
+          e = substr(s, pos + 1, 1)
+          if (index("\"\\/bfnrt", e)) { out = out c e; pos += 2; continue }
+          if (e == "u" && substr(s, pos + 2, 4) ~ /^[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]$/) { pos += 6; continue }
+          return bad("bad escape")
+        }
+        if (c == "\"") { pos++; return out }
+        if (c == "\n" || c == "\t") return bad("raw control character in a string")
+        out = out c; pos++
+      }
+      return bad("unterminated string")
+    }
+    function value(   c, t) {
+      ws(); vstr = ""; c = substr(s, pos, 1)
+      if (c == "{") return obj()
+      if (c == "[") return arr()
+      if (c == "\"") { vstr = str(); return }
+      t = substr(s, pos)
+      if (match(t, /^-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?/)) { pos += RLENGTH; return }
+      if (substr(t, 1, 4) == "true" || substr(t, 1, 4) == "null") { pos += 4; return }
+      if (substr(t, 1, 5) == "false") { pos += 5; return }
+      bad("unexpected " (c == "" ? "end of input" : "\"" c "\""))
+    }
+    function arr() {
+      pos++; ws()
+      if (substr(s, pos, 1) == "]") { pos++; return }
+      while (!err) {
+        value(); ws()
+        if (substr(s, pos, 1) == ",") { pos++; continue }
+        if (substr(s, pos, 1) == "]") { pos++; return }
+        bad("expected , or ]")
+      }
+    }
+    function obj(   k, id, keys) {
+      pos++; ws(); keys = 0; id = ""
+      if (substr(s, pos, 1) == "}") { pos++; return }
+      while (!err) {
+        ws(); k = str(); ws()
+        if (err) return
+        if (substr(s, pos, 1) != ":") { bad("expected :"); return }
+        pos++; value(); keys++
+        if (k == "@id") id = vstr
+        ws()
+        if (substr(s, pos, 1) == ",") { pos++; continue }
+        if (substr(s, pos, 1) == "}") { pos++; break }
+        bad("expected , or }")
+      }
+      if (id != "") { if (keys > 1) node[id] = 1; else ref[id] = 1 }
+    }
+    function check() {
+      n = length(s); pos = 1; err = ""
+      value(); ws()
+      if (!err && pos <= n) bad("trailing content")
+      if (err) print "block " ++blocks ": " err
+      s = ""
+    }
+    $0 == "\001" { check(); next }
+    { s = s $0 "\n" }
+    END { for (id in ref) if (!(id in node)) print "@id does not resolve: " id }
+  ')
+  [ -z "$ld" ] || printf '%s\n' "$ld" | while IFS= read -r line; do fail "$page: JSON-LD $line"; done
+  [ -z "$ld" ] || status=1
+done
+
 if [ $status -eq 0 ]; then
-  echo "site: $(printf '%s\n' "$pages" | wc -l | tr -d ' ') pages, structure balanced, every internal link resolves."
+  echo "site: $(printf '%s\n' "$pages" | wc -l | tr -d ' ') pages, structure balanced, every internal link resolves, metadata in bounds, JSON-LD resolves."
 fi
 exit $status
