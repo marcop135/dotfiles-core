@@ -1,0 +1,21 @@
+{
+  "ci": {
+    "collect": {
+      "staticDistDir": "./site",
+      "url": ["http://localhost/", "http://localhost/privacy.html"],
+      "numberOfRuns": 1,
+      "settings": {
+        "skipAudits": ["robots-txt"]
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:seo": ["error", { "minScore": 0.95 }]
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": ".lighthouseci"
+    }
+  }
+}

@@ -59,6 +59,28 @@ jobs:
         # Same rule as the gate above: a shell script, nothing installed.
         run: bash ./scripts/check-site.sh
 
+  lighthouse:
+    # The SEO score of the two indexable pages, served from site/ as is. The
+    # runner ships Node and Chrome, so nothing is added to the repository.
+    # lighthouserc.json skips the robots-txt audit: it reports the
+    # Content-Signal line as an unknown directive, and that line is deliberate.
+    name: lighthouse
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: SEO score of 95 or more
+        run: npx --yes @lhci/cli@0.15.1 autorun --config=.github/lighthouserc.json
+
+      - name: SEO audits that did not pass
+        if: always()
+        run: |
+          for f in .lighthouseci/lhr-*.json; do
+            [ -f "$f" ] || continue
+            jq -r '.finalDisplayedUrl as $u | . as $r | .categories.seo.auditRefs[] | select(.weight > 0)
+              | $r.audits[.id] | select(.score != 1) | "\($u) \(.id) \(.score) \(.displayValue // "")"' "$f"
+          done
+
   install:
     # macOS is a first-class target here, not a courtesy entry. It is the
     # platform this repository is least often edited from, so it is the one

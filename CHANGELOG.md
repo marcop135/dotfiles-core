@@ -5,6 +5,37 @@
 - **Length:** Keep each bullet on one line, max 120 characters (link URLs do not count toward the cap, only the visible text does).
 - **Links:** Add inline markdown links for related PRs, docs, and external references when they help the reader.
 
+## [1.10.0] - 2026-11-17
+
+### Added
+
+- Add a Markdown twin of the privacy page, linked from the page ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Add the llms.txt, sitemap, security.txt, and API catalog `Link` header to every HTML page ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Add a `Link` header from each Markdown twin back to its HTML page ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Add title and description length, unique description, and JSON-LD checks to the site gate ([#53](https://github.com/marcop135/dotfiles-core/pull/53), [#50](https://github.com/marcop135/dotfiles-core/issues/50)).
+- Add a Lighthouse CI run that fails below an SEO score of 95 ([#53](https://github.com/marcop135/dotfiles-core/pull/53), [#50](https://github.com/marcop135/dotfiles-core/issues/50)).
+- Add a weekly external link check for the site ([#53](https://github.com/marcop135/dotfiles-core/pull/53), [#50](https://github.com/marcop135/dotfiles-core/issues/50)).
+
+### Changed
+
+- Docs copy: State the portability rule in CONTRIBUTING.md as a plain statement ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+- Docs copy: Say in CONTRIBUTING.md that a green local run covers only that platform ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+- Docs copy: Write the scope line in AGENTS.md as one sentence ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+- Docs copy: Drop the aside about comments from the unpinned installers note in SECURITY.md ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+- Other copy: Match the home page Open Graph image alt text to the privacy page ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+- Other copy: Lengthen the 500 page title to 34 characters ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+- Other copy: Name the four shells in the JSON-LD and manifest site descriptions ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+- Other copy: Retitle the llms.txt facts section as a neutral "Facts" heading ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
+- Put `Content-Signal` inside the `User-agent: *` group of robots.txt and drop the repeated bot groups ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Set the sitemap `lastmod` and home page `dateModified` to the last git change ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Link the FAQ node from the home page JSON-LD graph ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Serve the Open Graph card as a 48 KB JPEG instead of a 202 KB PNG ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Send `No-Vary-Search` so UTM parameters share one cache entry ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+
+### Removed
+
+- Remove the Twitter tags that repeat Open Graph ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+
 ## [1.9.0] - 2026-11-06
 
 ### Added

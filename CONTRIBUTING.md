@@ -1,7 +1,7 @@
 # Contributing
 
 This repository configures four shells on three platforms from one tree. A
-change is portable or it is a regression somewhere you are not sitting.
+change that is not portable breaks on a platform you are not using.
 
 ## The gate
 
@@ -17,8 +17,8 @@ error, and a parse pass over every shell file. The second runs the real write
 path against a throwaway home directory: apply, unlink, restore.
 
 There is no build step and no other test command. CI runs the same two scripts
-on macOS, Ubuntu, and Windows, so a green run locally on one platform is half
-the answer.
+on macOS, Ubuntu, and Windows, so a green local run covers only that one
+platform.
 
 Windows contributors run the PowerShell side as well:
 

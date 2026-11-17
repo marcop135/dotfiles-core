@@ -1,7 +1,8 @@
 # AGENTS.md
 
 Shell, prompt, and git configuration for macOS (zsh), Windows Git Bash, WSL
-(bash), and Windows PowerShell. Two machines, three platforms, four rc files.
+(bash), and Windows PowerShell. It covers two machines, three platforms, and
+four rc files.
 `README.md` is the document for people; this is the working contract.
 
 ## The gate
@@ -14,10 +15,12 @@ Exit 0 or the change is not done. It validates the manifest, every relative
 markdown link, every repository path named in the markdown, every runnable
 script being named by the markdown, shellcheck at severity error, and a parse
 pass over every shell file. A change under `site/` also passes
-`bash ./scripts/check-site.sh`: page structure, internal links, and no inline
-style or script. There is no other test command and no build step. CI runs both
-scripts, and additionally applies, unlinks, and restores the real installers
-against a throwaway home directory on macOS, Ubuntu, and Windows.
+`bash ./scripts/check-site.sh`: page structure, internal links, no inline style
+or script, title and description lengths, and JSON-LD. There is no other test
+command and no build step. CI runs both scripts, and additionally applies,
+unlinks, and restores the real installers against a throwaway home directory on
+macOS, Ubuntu, and Windows. It also scores the site's SEO with Lighthouse on
+every push and checks its external links weekly.
 
 ## Single source of truth
 
