@@ -23,6 +23,22 @@ $appsUseLight = (Get-ItemProperty `
 
 $env:COLORFGBG = if ($appsUseLight -eq 1) { '0;15' } else { '15;0' }
 
+# git-extras' Windows installer uses mingw64. Git for Windows puts ucrt64 on
+# PATH and leaves mingw64 off it, so the commands are on disk and not found.
+if (-not (Get-Command git-extras -ErrorAction SilentlyContinue)) {
+    $gitCmd = Get-Command git -CommandType Application -ErrorAction SilentlyContinue
+    if ($gitCmd) {
+        $gitRoot = Split-Path (Split-Path (Split-Path (& git --exec-path) -Parent) -Parent) -Parent
+        $gitExtrasBin = Join-Path $gitRoot 'mingw64\bin'
+        $onPath = $gitExtrasBin -in ($env:PATH -split ';')
+        if ((Test-Path -LiteralPath (Join-Path $gitExtrasBin 'git-extras')) -and -not $onPath) {
+            $env:PATH += ";$gitExtrasBin"
+        }
+        Remove-Variable gitRoot, gitExtrasBin, onPath
+    }
+    Remove-Variable gitCmd
+}
+
 # Re-read it without restarting the shell, for when you toggle the OS theme
 # mid-session.
 function Update-Theme {

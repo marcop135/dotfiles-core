@@ -64,6 +64,7 @@ PACKAGES=(
   python3-venv      # Ubuntu splits venv out of python3. pip fails without it.
   python3-pip
   pipx
+  git-extras        # git summary, git undo, and the other git-extras commands
 )
 
 section 'apt packages'

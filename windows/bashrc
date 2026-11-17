@@ -19,6 +19,12 @@ export DOTFILES_ROOT
 # ---------- Shared layer ----------
 [ -r "$DOTFILES_ROOT/shared/shell/init.sh" ] && . "$DOTFILES_ROOT/shared/shell/init.sh"
 
+# git-extras' Windows installer uses mingw64. Git for Windows puts ucrt64 on
+# PATH and leaves mingw64 off it, so the commands are on disk and not found.
+if ! command -v git-extras >/dev/null 2>&1 && [ -f /mingw64/bin/git-extras ]; then
+  export PATH="$PATH:/mingw64/bin"
+fi
+
 # ---------- bash options ----------
 export HISTFILE="$HOME/.bash_history"
 export HISTCONTROL=ignoreboth:erasedups   # No duplicates, no leading-space commands.
