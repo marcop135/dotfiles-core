@@ -17,12 +17,13 @@
 
 ### Added
 
-- Site: Add `/privacy.md`, `Link` headers, `No-Vary-Search`, llms.txt, a sitemap, security.txt, and an API catalog link ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Site: Add `/privacy.md`, `Link` headers, `No-Vary-Search`, llms.txt, sitemap, security.txt, API catalog ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
 - Site: Check metadata and JSON-LD in CI, require Lighthouse SEO of 95, and check external links weekly ([#53](https://github.com/marcop135/dotfiles-core/pull/53), [#50](https://github.com/marcop135/dotfiles-core/issues/50)).
 
 ### Changed
 
-- Site: Serve a 48 KB Open Graph JPEG, drop duplicate Twitter tags, and put `Content-Signal` in `User-agent: *` ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Site: Serve a 48 KB Open Graph JPEG and drop the duplicate Twitter tags ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Site: Put `Content-Signal` in `User-agent: *` ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
 - Site: Set sitemap and home page dates from the last git change, and link the FAQ from the home JSON-LD ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
 - Site: Name the four shells in the descriptions and match the Open Graph alt to the privacy page ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
 - State the portability rule in CONTRIBUTING, and say a green local run covers one platform ([#51](https://github.com/marcop135/dotfiles-core/pull/51), [#48](https://github.com/marcop135/dotfiles-core/issues/48)).
