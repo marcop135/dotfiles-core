@@ -70,6 +70,15 @@ jobs:
       - name: SEO score of 95 or more
         run: npx --yes @lhci/cli@0.15.1 autorun --config=.github/lighthouserc.json
 
+      - name: SEO audits that did not pass
+        if: always()
+        run: |
+          for f in .lighthouseci/lhr-*.json; do
+            [ -f "$f" ] || continue
+            jq -r '.finalDisplayedUrl as $u | . as $r | .categories.seo.auditRefs[] | select(.weight > 0)
+              | $r.audits[.id] | select(.score != 1) | "\($u) \(.id) \(.score) \(.displayValue // "")"' "$f"
+          done
+
   install:
     # macOS is a first-class target here, not a courtesy entry. It is the
     # platform this repository is least often edited from, so it is the one

@@ -1,6 +1,7 @@
 # External links on the site: GitHub, the author site, and the analytics host
 # can move without this repository changing, so this runs on a schedule rather
-# than on every push. Internal links are already checked by check-site.sh.
+# than on every push. Internal links, and absolute links to this site, are
+# checked against site/ by check-site.sh, so a page not yet deployed passes.
 
 name: links
 
@@ -30,6 +31,7 @@ jobs:
             --scheme https
             --scheme http
             --max-retries 3
+            --exclude '^https://dotfiles\.marcopontili\.com/'
             --root-dir ${{ github.workspace }}/site
             'site/**/*.html'
             'site/**/*.md'
