@@ -62,6 +62,8 @@ jobs:
   lighthouse:
     # The SEO score of the two indexable pages, served from site/ as is. The
     # runner ships Node and Chrome, so nothing is added to the repository.
+    # lighthouserc.json skips the robots-txt audit: it reports the
+    # Content-Signal line as an unknown directive, and that line is deliberate.
     name: lighthouse
     runs-on: ubuntu-latest
     steps:

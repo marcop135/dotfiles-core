@@ -3,7 +3,10 @@
     "collect": {
       "staticDistDir": "./site",
       "url": ["http://localhost/", "http://localhost/privacy.html"],
-      "numberOfRuns": 1
+      "numberOfRuns": 1,
+      "settings": {
+        "skipAudits": ["robots-txt"]
+      }
     },
     "assert": {
       "assertions": {
