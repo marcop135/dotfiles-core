@@ -12,6 +12,9 @@
 - Add a Markdown twin of the privacy page, linked from the page ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
 - Add the llms.txt, sitemap, security.txt, and API catalog `Link` header to every HTML page ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
 - Add a `Link` header from each Markdown twin back to its HTML page ([#52](https://github.com/marcop135/dotfiles-core/pull/52), [#49](https://github.com/marcop135/dotfiles-core/issues/49)).
+- Add title and description length, unique description, and JSON-LD checks to the site gate ([#53](https://github.com/marcop135/dotfiles-core/pull/53), [#50](https://github.com/marcop135/dotfiles-core/issues/50)).
+- Add a Lighthouse CI run that fails below an SEO score of 95 ([#53](https://github.com/marcop135/dotfiles-core/pull/53), [#50](https://github.com/marcop135/dotfiles-core/issues/50)).
+- Add a weekly external link check for the site ([#53](https://github.com/marcop135/dotfiles-core/pull/53), [#50](https://github.com/marcop135/dotfiles-core/issues/50)).
 
 ### Changed
 

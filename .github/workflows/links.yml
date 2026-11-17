@@ -1,0 +1,39 @@
+# External links on the site: GitHub, the author site, and the analytics host
+# can move without this repository changing, so this runs on a schedule rather
+# than on every push. Internal links are already checked by check-site.sh.
+
+name: links
+
+on:
+  schedule:
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/links.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  external:
+    name: external links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: lychee
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: >-
+            --no-progress
+            --scheme https
+            --scheme http
+            --max-retries 3
+            --root-dir ${{ github.workspace }}/site
+            'site/**/*.html'
+            'site/**/*.md'
+            'site/llms.txt'
+          fail: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

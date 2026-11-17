@@ -15,10 +15,12 @@ Exit 0 or the change is not done. It validates the manifest, every relative
 markdown link, every repository path named in the markdown, every runnable
 script being named by the markdown, shellcheck at severity error, and a parse
 pass over every shell file. A change under `site/` also passes
-`bash ./scripts/check-site.sh`: page structure, internal links, and no inline
-style or script. There is no other test command and no build step. CI runs both
-scripts, and additionally applies, unlinks, and restores the real installers
-against a throwaway home directory on macOS, Ubuntu, and Windows.
+`bash ./scripts/check-site.sh`: page structure, internal links, no inline style
+or script, title and description lengths, and JSON-LD. There is no other test
+command and no build step. CI runs both scripts, and additionally applies,
+unlinks, and restores the real installers against a throwaway home directory on
+macOS, Ubuntu, and Windows. It also scores the site's SEO with Lighthouse on
+every push and checks its external links weekly.
 
 ## Single source of truth
 
