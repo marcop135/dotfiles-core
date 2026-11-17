@@ -5,6 +5,14 @@
 - **Length:** Keep each bullet on one line, max 120 characters (link URLs do not count toward the cap, only the visible text does).
 - **Links:** Add inline markdown links for related PRs, docs, and external references when they help the reader.
 
+## [1.11.0] - 2026-11-17
+
+### Added
+
+- Install git-extras from the WSL bootstrap ([#56](https://github.com/marcop135/dotfiles-core/pull/56), [#55](https://github.com/marcop135/dotfiles-core/issues/55)).
+- Put an existing mingw64 git-extras on the Git Bash PATH ([#56](https://github.com/marcop135/dotfiles-core/pull/56), [#55](https://github.com/marcop135/dotfiles-core/issues/55)).
+- Put an existing mingw64 git-extras on the PowerShell PATH ([#56](https://github.com/marcop135/dotfiles-core/pull/56), [#55](https://github.com/marcop135/dotfiles-core/issues/55)).
+
 ## [1.10.0] - 2026-11-17
 
 ### Added
